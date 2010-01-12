@@ -1,5 +1,4 @@
-
-\subsection{1D Abs Inf}
+\subsection{1D Abs Inf solution}
 
 \paragraph{Green's function}
 \begin{align}
@@ -7,15 +6,19 @@
   [ e^{-(z-z')^2/(4 D_1 t)} - e^{-(z+z')^2/(4 D_1 t)} ].
 \end{align}
 
+
 \paragraph{Survival probability}
+% Notes 2008-12-11 (Thomas).
 \begin{align}
-  S_{z=0}(t) = \int_0^\infty v dz =
-  \text{erf}(\frac{z'}{2\sqrt{D_1 t}}).
+  S(t) = \int_0^\infty v dz =
+  \erf(\frac{z'}{2\sqrt{D_1 t}}).
 \end{align}
+
 
 \paragraph{Propensity functions}
-\begin{align}
-  q_{z=0}(t) = -\frac{d}{dt} S_{z=0}(t)=
-  \frac{z'}{2\sqrt{\pi D_1 t^3}} e^{-z'^2/4Dt}.
-\end{align}
-
+% Notes 2008-12-11 (Thomas).
+Not needed.
+%\begin{align}
+%  q_{z=0}(t) = -\frac{d}{dt} S_{z=0}(t)=
+%  \frac{z'}{2\sqrt{\pi D_1 t^3}} e^{-z'^2/4D_1t}.
+%\end{align}

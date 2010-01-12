@@ -1,0 +1,23 @@
+\subsection{1D Rad Abs derivation}
+
+See Carslaw and Jaeger 14.3 II.
+
+
+\paragraph{Diffusion equation}
+\begin{align}
+  \pd{v}{t} = D_1 \pdd{v}{z}.
+\end{align}
+
+
+\paragraph{Boundary conditions}
+\begin{align}
+  \left.D_1\pd{v}{z}\right|&_{z=0} = k_+ v|_{z=0}
+  \qquad (h = k_+/D_1),\\
+  v|&_{z=L}=0.
+\end{align}
+
+
+\paragraph{Initial condition}
+\begin{align}
+  v(z,t'|z',t') = \delta(z-z') \qquad (0 \leq z' \leq L).
+\end{align}

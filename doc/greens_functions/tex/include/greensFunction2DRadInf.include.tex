@@ -1,0 +1,45 @@
+\subsection{2D Rad Inf solution}
+
+\paragraph{Green's function}
+\begin{align}
+  v(r,\t, t) = \frac{1}{2\pi}
+  \sum_{m=-\infty}^{\infty} \cos m(\t-\t')
+  \int_0^{\infty} C_m(ur)C_m(ur')u e^{-D_3 u^2 t} du,
+\end{align}
+
+where
+\begin{align}
+  C_m(z) =
+  \frac{ J_m(z) [uY_m'(au) - hY_m(au)] -
+	 Y_m(z) [uJ_m'(au) - hJ_m(au)] }
+       { \{ [u J_m'(au) - hJ_m(au)]^2 +
+	    [u Y_m'(au) - hY_m(au)]^2  \}^\frac{1}{2} }.
+\end{align}
+
+
+\paragraph{Survival probability}
+% Notes 2009-12-22 (Thomas).
+\begin{align}
+  S(t) &= \int_0^{2\pi}\int_a^{\infty} v(r,\t,t)rd\t dr\\
+% Doesn't have to be true:
+%      &= 1 - \int_0^{2\pi}\int_0^a v(r,\t,t)rd\t dr\\
+  &=
+  \int_0^{\infty} C_0(ur')u e^{-D_3 u^2 t}
+  \int_a^{\infty}C_0(ur) r dr du,
+\end{align}
+
+where
+\begin{align}
+  \int_a^{\infty}C_0(ur) r dr &= \\
+  &= \frac{1}{u^2}
+  \frac{ TODO [uY_m'(au) - hY_m(au)] -
+	 TODO [uJ_m'(au) - hJ_m(au)] }
+       { \{ [u J_m'(au) - hJ_m(au)]^2 +
+	    [u Y_m'(au) - hY_m(au)]^2  \}^\frac{1}{2} }.
+\end{align}
+
+%and $C_0(z)$ is the same as above with $m=0$.
+
+\paragraph{Propensity function}
+% Not in my notes (Thomas).
+Not needed.

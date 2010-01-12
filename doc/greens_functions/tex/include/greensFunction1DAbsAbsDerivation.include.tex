@@ -1,0 +1,37 @@
+\subsection{1D Abs Abs derivation}
+
+We follow Carslaw and Jaeger Chapter 10.10 II.
+
+
+\paragraph{Diffusion equation}
+\begin{align}
+  \pd{v}{t} = D_1 \pdd{v}{z}.
+\end{align}
+
+
+\paragraph{Boundary conditions}
+\begin{align}
+  v&|_{z=0} = 0,\\
+  v&|_{z=L} = 0
+\end{align}
+
+
+\paragraph{Initial condition}
+\begin{align}
+  v(z,t'|z',t') = \delta(z-z') \qquad (0 \leq z' \leq L).
+\end{align}
+
+
+\paragraph{Method of images}
+It is easily seen that in this case the solution for $v$ should have an 
+alternating sequence of sinks and sources as images in the planes $z=0$ and 
+$z=L$. The sources should be at points $z'+2nL$ and the sinks at points 
+$-z'+2nL$, where $n$ is a positive or negative integer value. So the solution  
+of the problem is then,
+\begin{align}
+  v(z,t|z',t'=0) = \frac{1}{2\sqrt{\pi D_1 t}}
+  \left(\sum_{n=-\infty}^{n=\infty} e^{-(z-z'-2nL)^2/4D_1t} - 
+  \sum_{n=-\infty}^{n=\infty} e^{-(z+z'-2nL)^2/4D_1t}\right).
+\end{align}
+
+Another way to write is given without derivation in the next section.

@@ -1,0 +1,26 @@
+\subsection{2D Rad Abs derivation}
+
+See master thesis Laurens Bossen. Similar in spirit to Carslaw and Jaeger 14.8 
+IV.
+
+
+\paragraph{Diffusion equation in cylindrical coordinates}
+\begin{align}
+  \pd{v}{t} = D_3\left\{\pdd{v}{r} + \frac{1}{r}\pd{v}{r} +
+  \frac{1}{r^2}\pdd{v}{\t}\right\}.
+\end{align}
+
+
+\paragraph{Boundary conditions}
+\begin{align}
+  \left.2\pi a D_3 \pd{v}{r}\right|_{r=a} &= k_+ v|_{r=a}
+  \qquad (h = k_+ / 2\pi a D_3),\\
+  v|_{r=b}&=0.
+\end{align}
+
+
+\paragraph{Initial condition}
+\begin{align}
+  v(r,\t,t'|r',\t',t') = \delta(r-r')\delta(\t-\t')
+  \qquad (a \leq r' \leq b).
+\end{align}

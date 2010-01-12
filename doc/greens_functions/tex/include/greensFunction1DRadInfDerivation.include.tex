@@ -1,0 +1,84 @@
+\subsection{1D Rad Inf derivation}
+
+We follow Carslaw and Jaeger Chapter 14.2 II.
+
+
+\paragraph{Diffusion equation}
+\begin{align}
+  \pd{v}{t} = D_1 \pdd{v}{z}.
+\end{align}
+
+
+\paragraph{Boundary conditions}
+\begin{align}
+  \left.D_1\pd{v}{z}\right |_{z=0} &= k_+ v|_{z=0}
+  \qquad (h = k_+/D_1),\\
+  v |_{z\to\infty}&=0.
+\end{align} 
+
+
+\paragraph{Initial condition}
+\begin{align}
+  v(z,t'|z',t') = \delta(z-z') \qquad (0 \leq z').
+\end{align}
+
+
+\paragraph{Seperation of free particle solution}
+The solution to this equation we will write as the sum of two parts
+\begin{align}
+  v=u+w.
+\end{align}
+Here $u$ is the sollution as if there were no boundary at $z=0$; the free 
+particle solution
+\begin{align}
+  u(x,t|z',t'=0) = \frac{1}{2\sqrt{\pi D_1t}} e^{-(z-z')^2/(4 D_1 t)}.
+\end{align}
+
+And $w$, the correction term, is the part of $v$ that should make it conform 
+with the boundary condition at $z=0$. Also, $w$ itself should go to $0$ at 
+$t=t'$, so that it doesn't interfere with $u$ which already accounts for the 
+initial condition.  
+
+This time we use the Laplace Transform method, because the method of images 
+only works for absorbing boundary conditions. To find $w$, we first transform 
+our time-coordinate $t$ to Laplace coordinate $s$.
+
+
+\paragraph{Laplace transform}
+Transforming a problem into Laplace space, $F(s) = \mathcal{L}\{f(t)\}$, makes 
+it easier to solve. $u(z,t)$ then becomes
+\begin{align}
+  \bar{u}(z,q) = \frac{1}{2D_1q} e^{-q|z-z'|}
+  \qquad (q=\sqrt{s/D_1}).
+\end{align}
+And $\bar{w}$ now has to satisfy the differential equation
+\begin{align}
+  \frac{d^2\bar{w}}{dz^2} - q^{2}\bar{w} = 0.
+\end{align}
+Of the 2 generic solutions $e^{qz}$ goes to infinity for $z$ to infinity, so 
+we are left with $Ae^{-qz}$. Combining this with $\bar{u}$ gives
+\begin{align}
+  \bar{v}(z) &= \bar{u}(z) + \bar{w}(z)\\
+  &= \frac{1}{2D_1q} e^{-q|z-z'|} + A e^{-qz}.
+\end{align}
+We need to pick $A$ such that the complete solution $v$ in Laplace coordinates
+satisfies the also transformed boundary condition at $z=0$, that is
+\begin{align}
+  \left.\pd{\bar{v}}{z}\right|_{z=z'} = h\bar{v}|_{z=z'}
+\end{align}
+Solving for $A$ gives
+\begin{align}
+  A &= \frac{1}{(q+h)}\frac{(q-h)}{2D_1q}e^{-qz'}\\
+  &=\{ \frac{1}{2D_1q} - \frac{h}{D_1 q(q+h)} \}e^{-q(z')},
+\end{align}
+and so the solution $\bar{v}$ becomes
+\begin{align}
+  \bar{v} = \frac{1}{2D_1q} e^{-q|z-z'|}
+  + \frac{1}{2D_1q} e^{-q(z+z')} - \frac{h}{D_1 q (q+h)}e^{-q(z+z')}.
+\end{align}
+
+
+\paragraph{Inverse Laplace transform}
+Looking up the inverse Laplace transform, $f(t) = \mathcal{L}^{-1}\{F(s)\}$,  
+of these 3 terms in a Laplace transforms table gives us the solution as given 
+in the next section.

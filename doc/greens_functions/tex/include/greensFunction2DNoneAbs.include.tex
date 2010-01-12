@@ -1,0 +1,38 @@
+\subsection{2D None Abs solution}
+
+\paragraph{Green's function}
+\begin{align}
+  v(r,\t,t) = \frac{1}{\pi a^2}
+  \sum_{m=-\infty}^{\infty} \cos m(\t-\t') \sum_{n=1}^{\infty} e^{-D_3\amn^2t} 
+  \frac{J_m(\amn r)J_m(\amn r')}
+  {[J'_m(\amn a)]^2},
+\end{align}
+
+where $\amn$ is the $n$-th root of
+\begin{align}
+  J_m(a\a) = 0.
+\end{align}
+
+
+\paragraph{Survival probability}
+% Notes 2009-12-22 (Thomas).
+\begin{align}
+  S(t) &= \int_0^{2\pi}\int_0^a v(r,\t,t)rd\t dr\\
+       &=
+  \frac{2}{a}
+  \sum_{n=1}^{\infty} e^{-D_3\azn^2t}
+  \frac{J_1(\azn a) J_0(\azn r')} {\azn [J'_0(\azn a)]^2}
+  \end{align}
+
+% where it is used that
+% \int_0^a J_0(\azn r) r dr = \frac{a}{\azn} J_1(\azn a),
+
+where $\azn$ is the $n$-th root of
+\begin{align}
+  J_0(a\a) = 0.
+\end{align}
+
+
+\paragraph{Propensity function}
+% Not in my notes (Thomas).
+Not needed.

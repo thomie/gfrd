@@ -1,0 +1,34 @@
+\subsection{1D Abs Inf derivation}
+
+We follow Carslaw and Jaeger Chapter 10.10 I.
+
+
+\paragraph{Diffusion equation}
+\begin{align}
+  \pd{v}{t} = D_1 \pdd{v}{z}.
+\end{align}
+
+
+\paragraph{Boundary conditions}
+\begin{align}
+  v &|_{z=0} = 0,\\
+  v &|_{z\to\infty} = 0.
+\end{align}
+
+
+\paragraph{Initial condition}
+\begin{align}
+  v(z,t'|z',t') = \delta(z-z') \qquad (0 \leq z').
+\end{align}
+
+
+\paragraph{Method of images}
+The solution for a free particle in one dimension, so without the boundary 
+condtion at $z=0$, is the well known
+\begin{align}
+  v(z,t|z',t'=0) = \frac{1}{2\sqrt{\pi D_1t}} e^{-(z-z')^2/(4 D_1 t)}.
+\end{align}
+
+The solution with the boundary condition at $z=0$ back into place can then be 
+found by adding an anti-particle or sink as an image at position $z=-z'$.  
+This sets $v$ to $0$ at $z=0$ and also gives the correct solution for $z>0$.
