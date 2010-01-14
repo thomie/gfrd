@@ -47,10 +47,9 @@ public:
 
     const Real drawR( const Real rnd, const Real t ) const;
 
+    // Needed for drawR.
     const Real p_int_r( const Real r, const Real t ) const;
     const Real p_int_r_free( const Real r, const Real t ) const;
-
-    const Real p_r_fourier( const Real r, const Real t ) const;
 
 
     const std::string dump() const;
@@ -73,9 +72,9 @@ private:
 	const Real target;
     };
 
+    // Needed for drawR.
     static const Real p_r_free_F( const Real r, 
                                   const p_r_params* params );
-
     static const Real p_r_F( const Real r, 
 			     const p_r_params* params );
 

@@ -80,175 +80,6 @@ FirstPassageGreensFunction::p_survival( const Real t ) const
 } 
 
 
-
-#if 0 // an alternative form, which is not very convergent.
-const Real 
-FirstPassageGreensFunction::p_survival( const Real t ) const
-{
-    const Real D( getD() );
-    const Real a( geta() );
-    const Real asq( a * a );
-    const Real Dt( D * t );
-    const Real PIsq( M_PI * M_PI );
-    const Real mDtPIsq_asq( - Dt * PIsq / asq );
-
-    const Integer N( 10000 );
-    Real value( 0. );
-
-    const Real threshold( exp( mDtPIsq_asq ) * CUTOFF );
-
-    for( Integer n( 1 ); n <= N; ++n )
-    {
-        const Real n2( n * 2 );
-        const Real n2m1( n2 - 1 );
-        const Real term1( expm1( n2m1 * n2m1 * mDtPIsq_asq ) );
-        const Real term2( expm1( n2 * n2 * mDtPIsq_asq ) );
-
-        const Real term( term1 - term2 );
-        value += term;
-
-        //printf("%g %g\n", value, term1-term2);
-
-        if( fabs( term ) < threshold )
-	{
-	    // normal exit.
-	    return value * 2;
-	}
-    }
-
-    std::cerr << "WARNING: p_survival didn't converge." << std::endl;
-    return value * 2;
-} 
-#endif // 0
-
-
-
-const Real 
-FirstPassageGreensFunction::p_int_r_free( const Real r, const Real t ) const
-{
-    const Real D( getD() );
-    const Real Dt( D * t );
-    const Real sqrtDt( sqrt( Dt ) );
-    const Real sqrtPI( sqrt( M_PI ) );
-
-    return erf( r / ( sqrtDt + sqrtDt ) )
-        - r * exp( - r * r / ( 4.0 * Dt ) ) / ( sqrtPI * sqrtDt );
-}
-
-const Real 
-FirstPassageGreensFunction::p_int_r( const Real r, 
-                                     const Real t ) const
-{
-    Real value( 0.0 );
-
-    const Real a( geta() );
-    const Real p_free( this->p_int_r_free( r, t ) );
-
-    // p_int_r is always smaller than p_free.
-    if( fabs( p_free ) < CUTOFF )
-    {
-	return 0.0;
-    }
-
-    const Real D( getD() );
-    const Real asq( a * a );
-    const Real PIsq( M_PI * M_PI );
-
-    const Real PIr( M_PI * r );
-    const Real PIr_a( PIr / a );
-    const Real DtPIsq_asq( D * t * PIsq / asq );
-    
-    const Real factor( 2.0 / ( a * M_PI ) );
-
-    const Real maxn( ( a / M_PI ) * sqrt( log( exp( DtPIsq_asq ) / CUTOFF ) / 
-                                          ( D * t ) ) );
-
-    const Integer N_MAX( 10000 );
-
-    const Integer N( std::min( static_cast<Integer>( ceil( maxn ) + 1 ),
-                               N_MAX ) );
-    if( N == N_MAX )
-    {
-        std::cerr << "FirstPassageGreensFunction::p_int_r didn't converge." 
-                  << std::endl;
-    }
-    
-
-    for( int n( 1 ); n <= N; ++n )
-    {
-	const Real term1( exp( - n * n * DtPIsq_asq ) );
-      
-	const Real angle_n( n * PIr_a );
-	Real sin_n;
-	Real cos_n;
-	sincos( angle_n, &sin_n, &cos_n );
-	const Real term2( a * sin_n );
-	const Real term3( n * PIr * cos_n );
-
-	const Real term( term1 * ( term2 - term3 ) / n );
-	value += term;
-    }
-
-    return value * factor;
-} 
-
-
-
-
-
-const Real 
-FirstPassageGreensFunction::p_r_fourier( const Real r, const Real t ) const 
-{
-    Real value( 0.0 );
-
-    const Real D( getD() );
-    const Real a( geta() );
-    const Real asq( a * a );
-    const Real PIsq( M_PI * M_PI );
-
-    const Integer N( 100 );
-
-    long int n( 1 );
-    while( true )
-    {
-	const Real term1( exp( - ( PIsq * r * r + asq * n*n ) / 
-			       ( 4.0 * D * PIsq * t ) ) );
-
-	const Real term2( M_PI * r * 
-			  exp( gsl_sf_lncosh( a * r * n / 
-					      ( 2.0 * D * M_PI * t ) ) ) );
-
-	const Real term3( a * n *
-			  exp( gsl_sf_lnsinh( a * r * n / 
-					      ( 2.0 * D * M_PI * t ) ) ) );
-
-
-	const Real term( term1 * r * ( term2 - term3 ) );
-	value += term;
-
-	//      printf("%d %g %g %g %g\n", n, value, term, term2, term3 );
-
-	if( fabs( value ) * 1e-8 > fabs( term ) )
-	{
-	    break;
-	}
-
-	if( n > N )
-	{
-	    std::cerr << "p_r_fourier: didn't converge; " << n << " " << value 
-		      << std::endl;
-	    break;
-	}
-
-	++n;
-    }
-
-    const Real factor( 1.0 / ( sqrt( 2 ) * PIsq * pow(D * t, 1.5) ) );
-
-    return value * factor;
-} 
-
-
 const Real
 FirstPassageGreensFunction::p_survival_F( const Real t,
 					  const p_survival_params* params )
@@ -258,7 +89,6 @@ FirstPassageGreensFunction::p_survival_F( const Real t,
 
     return rnd - gf->p_survival( t );
 }
-
 
 
 const Real 
@@ -356,6 +186,78 @@ FirstPassageGreensFunction::drawTime( const Real rnd ) const
     return t;
 }
 
+
+const Real 
+FirstPassageGreensFunction::p_int_r_free( const Real r, const Real t ) const
+{
+    const Real D( getD() );
+    const Real Dt( D * t );
+    const Real sqrtDt( sqrt( Dt ) );
+    const Real sqrtPI( sqrt( M_PI ) );
+
+    return erf( r / ( sqrtDt + sqrtDt ) )
+        - r * exp( - r * r / ( 4.0 * Dt ) ) / ( sqrtPI * sqrtDt );
+}
+
+
+const Real 
+FirstPassageGreensFunction::p_int_r( const Real r, 
+                                     const Real t ) const
+{
+    Real value( 0.0 );
+
+    const Real a( geta() );
+    const Real p_free( this->p_int_r_free( r, t ) );
+
+    // p_int_r is always smaller than p_free.
+    if( fabs( p_free ) < CUTOFF )
+    {
+	return 0.0;
+    }
+
+    const Real D( getD() );
+    const Real asq( a * a );
+    const Real PIsq( M_PI * M_PI );
+
+    const Real PIr( M_PI * r );
+    const Real PIr_a( PIr / a );
+    const Real DtPIsq_asq( D * t * PIsq / asq );
+    
+    const Real factor( 2.0 / ( a * M_PI ) );
+
+    const Real maxn( ( a / M_PI ) * sqrt( log( exp( DtPIsq_asq ) / CUTOFF ) / 
+                                          ( D * t ) ) );
+
+    const Integer N_MAX( 10000 );
+
+    const Integer N( std::min( static_cast<Integer>( ceil( maxn ) + 1 ),
+                               N_MAX ) );
+    if( N == N_MAX )
+    {
+        std::cerr << "FirstPassageGreensFunction::p_int_r didn't converge." 
+                  << std::endl;
+    }
+    
+
+    for( int n( 1 ); n <= N; ++n )
+    {
+	const Real term1( exp( - n * n * DtPIsq_asq ) );
+      
+	const Real angle_n( n * PIr_a );
+	Real sin_n;
+	Real cos_n;
+	sincos( angle_n, &sin_n, &cos_n );
+	const Real term2( a * sin_n );
+	const Real term3( n * PIr * cos_n );
+
+	const Real term( term1 * ( term2 - term3 ) / n );
+	value += term;
+    }
+
+    return value * factor;
+} 
+
+
 const Real
 FirstPassageGreensFunction::p_r_free_F( const Real r,
                                         const p_r_params* params )
@@ -378,7 +280,6 @@ FirstPassageGreensFunction::p_r_F( const Real r,
 
     return gf->p_int_r( r, t ) - target;
 }
-
 
 
 const Real 
@@ -445,7 +346,6 @@ FirstPassageGreensFunction::drawR( const Real rnd, const Real t ) const
 
     return r;
 }
-
 
 
 const std::string FirstPassageGreensFunction::dump() const
