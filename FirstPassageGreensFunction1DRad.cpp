@@ -145,7 +145,7 @@ const Real FirstPassageGreensFunction1DRad::p_survival (const Real t) const
     // fail at some point?
     while ( fabs(term/sum) > EPSILON*1.0 ||
 	fabs(term_prev/sum) > EPSILON*1.0 ||
-	n <= MIN_TERMEN);
+	n <= MIN_N_TERMS);
 
     return 2.0*sum;
 }
@@ -190,7 +190,7 @@ const
 
     do
     {
-	if ( n >= MAX_TERMEN )
+	if ( n >= MAX_N_TERMS )
 	{
 	    std::cerr << "Too many terms needed for GF1DRad::prob_r. N: "
 	              << n << std::endl;
@@ -209,7 +209,7 @@ const
     // PDENS_TYPICAL is now 1e3, is this any good?!
     while (fabs(term/sum) > EPSILON*PDENS_TYPICAL || 
 	fabs(prev_term/sum) > EPSILON*PDENS_TYPICAL ||
-	n <= MIN_TERMEN );
+	n <= MIN_N_TERMS );
 
     return 2.0*sum;
 }
@@ -236,7 +236,7 @@ const Real FirstPassageGreensFunction1DRad::flux_tot (const Real t) const
 
     do
     {
-	if ( n >= MAX_TERMEN )
+	if ( n >= MAX_N_TERMS )
 	{
 	    std::cerr << "Too many terms needed for GF1DRad::flux_tot. N: "
 	              << n << std::endl;
@@ -251,7 +251,7 @@ const Real FirstPassageGreensFunction1DRad::flux_tot (const Real t) const
     }
     while (fabs(term/sum) > EPSILON*PDENS_TYPICAL ||
 	fabs(prev_term/sum) > EPSILON*PDENS_TYPICAL ||
-	n <= MIN_TERMEN );
+	n <= MIN_N_TERMS );
 
     return sum*2.0*D;
 }
@@ -331,7 +331,7 @@ double FirstPassageGreensFunction1DRad::drawT_f (double t, void *p)
     }
     while (fabs(term/sum) > EPSILON*1.0 ||
 	fabs(prev_term/sum) > EPSILON*1.0 ||
-	n <= MIN_TERMEN );
+	n <= MIN_N_TERMS );
 
     // find the intersection with the random number
     return 1.0 - 2.0*sum - params->rnd;
@@ -370,7 +370,7 @@ const Real FirstPassageGreensFunction1DRad::drawTime (const Real rnd) const
     // produce the coefficients and the terms in the exponent and put them
     // in the params structure. This is not very efficient at this point,
     // coefficients should be calculated on demand->TODO
-    for (int n=0; n<MAX_TERMEN; n++)
+    for (int n=0; n<MAX_N_TERMS; n++)
     {
 	An = a_n (n+1); // get the n-th root of tan(alfa*L)=alfa/-k
 	tmp0 = An * An; // An^2
@@ -390,7 +390,7 @@ const Real FirstPassageGreensFunction1DRad::drawTime (const Real rnd) const
     // store the random number for the probability
     parameters.rnd = rnd;
     // store the number of terms used
-    parameters.terms = MAX_TERMEN;
+    parameters.terms = MAX_N_TERMS;
     parameters.tscale = this->t_scale;
 
     // Define the function for the rootfinder
@@ -501,7 +501,7 @@ double FirstPassageGreensFunction1DRad::drawR_f (double z, void *p)
     // the function returns a probability (scale is 1)
     while (fabs(term/sum) > EPSILON*1.0 ||
 	fabs(prev_term/sum) > EPSILON*1.0 ||
-	n <= MIN_TERMEN );
+	n <= MIN_N_TERMS );
 
     // het snijpunt vinden met het random getal
     return sum - params->rnd;
@@ -539,7 +539,7 @@ FirstPassageGreensFunction1DRad::drawR (const Real rnd, const Real t) const
 
     // produce the coefficients and the terms in the exponent and put them
     // in the params structure
-    for (int n=0; n<MAX_TERMEN; n++)
+    for (int n=0; n<MAX_N_TERMS; n++)
     {
 	An = a_n (n+1); // get the n-th root of tan(alfa*L)=alfa/-k
 	tmp0 = An * An; // An^2
@@ -557,7 +557,7 @@ FirstPassageGreensFunction1DRad::drawR (const Real rnd, const Real t) const
     // store the random number for the probability
     parameters.rnd = rnd;
     // store the number of terms used
-    parameters.terms = MAX_TERMEN;
+    parameters.terms = MAX_N_TERMS;
 
 
     // find the intersection on the y-axis between the random number and

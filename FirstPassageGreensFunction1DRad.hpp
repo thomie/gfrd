@@ -33,9 +33,9 @@ private:
     // Is 1E3 a good measure for the probability density?!
     static const Real PDENS_TYPICAL = 1;
     // The maximum number of terms used in calculating the sum
-    static const int MAX_TERMEN = 500;
+    static const int MAX_N_TERMS = 500;
     // The minimum number of terms
-    static const int MIN_TERMEN = 20;
+    static const int MIN_N_TERMS = 20;
 
 
 public:
@@ -182,8 +182,8 @@ private:
     struct drawT_params
     {
 	// use 10 terms in the summation for now
-	double exponent[MAX_TERMEN];
-	double Xn[MAX_TERMEN];
+	double exponent[MAX_N_TERMS];
+	double Xn[MAX_N_TERMS];
 	int    terms;
 	// the timescale used for convergence
 	Real   tscale;
@@ -195,9 +195,9 @@ private:
 
     struct drawR_params
     {
-	double An[MAX_TERMEN];
-	double S_Cn_An[MAX_TERMEN];
-	double b_An[MAX_TERMEN];
+	double An[MAX_N_TERMS];
+	double S_Cn_An[MAX_N_TERMS];
+	double b_An[MAX_N_TERMS];
 	int terms;
 	// the random number associated with the time
 	double rnd;

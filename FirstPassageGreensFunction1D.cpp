@@ -44,7 +44,7 @@ const Real FirstPassageGreensFunction1D::p_survival (const Real t) const
 
     do
     {
-	if (n >= MAX_TERMEN )
+	if (n >= MAX_N_TERMS )
 	{
 	    std::cerr << "Too many terms for p_survival. N: " << n << std::endl;
 	    break;
@@ -102,7 +102,7 @@ const
 
     do
     {
-	if (n >= MAX_TERMEN )
+	if (n >= MAX_N_TERMS )
 	{
 	    std::cerr << "Too many terms for prob_r. N: " << n << std::endl;
 	    break;
@@ -198,7 +198,7 @@ const Real FirstPassageGreensFunction1D::leaves(const Real t) const
 
     do
     {
-	if (n >= MAX_TERMEN )
+	if (n >= MAX_N_TERMS )
 	{
 	    std::cerr << "Too many terms for p_survival. N: " << n << std::endl;
 	    break;
@@ -249,7 +249,7 @@ const Real FirstPassageGreensFunction1D::leavea(const Real t) const
 
     do
     {
-	if (n >= MAX_TERMEN )
+	if (n >= MAX_N_TERMS )
 	{
 	    std::cerr << "Too many terms for leaves. N: " << n << std::endl;
 	    break;
@@ -353,12 +353,12 @@ const Real FirstPassageGreensFunction1D::drawTime (const Real rnd) const
 	n++;
     }
     // modify this later to include a cutoff when changes are small
-    while (n<MAX_TERMEN);
+    while (n<MAX_N_TERMS);
 
     // store the random number for the probability
     parameters.rnd = rnd;
     // store the number of terms used
-    parameters.terms = MAX_TERMEN;
+    parameters.terms = MAX_N_TERMS;
     parameters.tscale = this->t_scale;
 
 //debugging
@@ -530,12 +530,12 @@ const
 	parameters.n_l[n]    = nPI/(L);
 	n++;
     }
-    while (n<MAX_TERMEN);
+    while (n<MAX_N_TERMS);
 
     // store the random number for the probability
     parameters.rnd = rnd ;
     // store the number of terms used
-    parameters.terms = MAX_TERMEN;
+    parameters.terms = MAX_N_TERMS;
 
     // find the intersection on the y-axis between the random number and 
     // the function

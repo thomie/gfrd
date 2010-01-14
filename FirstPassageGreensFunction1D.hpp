@@ -33,7 +33,7 @@ private:
     //E3; Is 1E3 a good measure for the probability density?!
     static const Real PDENS_TYPICAL = 1;
     // The maximum number of terms in the sum
-    static const int MAX_TERMEN = 500;
+    static const int MAX_N_TERMS = 500;
     // The minimum
     static const int MIN_TERMEN = 20;
 
@@ -139,8 +139,8 @@ private:
     struct drawT_params
     {
 	// use 10 terms in the summation for now
-	double exponent[MAX_TERMEN];
-	double Xn[MAX_TERMEN];
+	double exponent[MAX_N_TERMS];
+	double Xn[MAX_N_TERMS];
 	int    terms;
 	Real tscale;
 	// the random number associated with the time
@@ -151,8 +151,8 @@ private:
 
     struct drawR_params
     {
-	double S_Cn_An[MAX_TERMEN];
-	double n_l[MAX_TERMEN];
+	double S_Cn_An[MAX_N_TERMS];
+	double n_l[MAX_N_TERMS];
 	int terms;
 	// the random number associated with the time
 	double rnd;
