@@ -29,7 +29,7 @@ private:
     // The typical timescale of the system, may also not be true!!
     static const Real T_TYPICAL = 1E-6;
     // measure of 'sameness' when comparing floating points numbers
-    static const Real EPSILON = 1E-10;
+    static const Real EPSILON = 1E-12;
     // Is 1E3 a good measure for the probability density?!
     static const Real PDENS_TYPICAL = 1;
     // The maximum number of terms used in calculating the sum
