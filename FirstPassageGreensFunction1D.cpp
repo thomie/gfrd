@@ -30,7 +30,7 @@ const Real FirstPassageGreensFunction1D::p_survival (const Real t) const
     const Real D(this->getD());
     const Real r0(this->getr0());
 
-    if ( L < 0 || fabs (L-r0) < EPSILON || r0 < EPSILON )
+    if ( L < 0 || L == r0 || r0 == 0 )
     {
 	// The survival probability of a zero domain is zero?
 	return 0.0;
@@ -89,7 +89,7 @@ const
 	    return 0.0;
 	}
     }
-    else if ( r < EPSILON || (L-r) < EPSILON || L < 0 )
+    else if ( r == 0 || L == r || L < 0 )
     {
 	return 0.0;
     }
@@ -176,13 +176,13 @@ const Real FirstPassageGreensFunction1D::leaves(const Real t) const
     const Real D(this->getD());
     const Real r0(this->getr0());
 
-    if ( L < 0 || r0 < EPSILON )
+    if ( L < 0 || r0 == 0 )
     {
 	// The flux of a zero domain is zero? Also if the particle 
 	// started on the left boundary
 	return INFINITY;
     }
-    else if ( t < EPSILON*this->t_scale )
+    else if ( t == 0 )
     {
 	// if t=0.0 the flux must be zero
 	return 0.0;
@@ -227,13 +227,13 @@ const Real FirstPassageGreensFunction1D::leavea(const Real t) const
     const Real D(this->getD());
     const Real r0(this->getr0());
 
-    if ( L < 0 || fabs (L-r0) < EPSILON )
+    if ( L < 0 || L== r0 )
     {
 	// The flux of a zero domain is zero? Also if the particle 
 	// started on the right boundary.
 	return INFINITY;
     }
-    else if ( t < EPSILON*this->t_scale )
+    else if ( t == 0 )
     {
 	// if t=0.0 the flux must be zero
 	return 0.0;
@@ -284,12 +284,12 @@ const
     // if t=0 nothing has happened->no event!!
     THROW_UNLESS( std::invalid_argument, t > 0.0 );
 
-    if ( fabs( r0 - L ) < EPSILON*L )
+    if ( r0 == L )
     {
 	// if the particle started on the right boundary
 	return ESCAPE;
     }
-    else if ( r0 < EPSILON )
+    else if ( r0 == 0 )
     {
 	// if the particle started on the left boundary
 	return REACTION;
@@ -323,7 +323,7 @@ const Real FirstPassageGreensFunction1D::drawTime (const Real rnd) const
     {
 	return INFINITY;
     }
-    else if (L < 0 || r0 < EPSILON || r0 > (L-EPSILON))
+    else if (L < 0 || r0 == 0 || r0 == L)
     {
 	// if the domain had size zero
 	return 0.0;
@@ -378,6 +378,11 @@ for (double t=0; t<0.1; t += 0.0001)
 
     // construct a guess: msd = sqrt (2*d*D*t)
     const Real t_guess( dist * dist / ( 2. * D ) );
+
+    // Define a minimal time so system does not come to a halt.
+    const Real minT( std::min( this->MIN_T,
+                               t_guess * 1e-6 ) );
+
     Real value( GSL_FN_EVAL( &F, t_guess ) );
     Real low( t_guess );
     Real high( t_guess );
@@ -409,7 +414,7 @@ for (double t=0; t<0.1; t += 0.0001)
 	Real value_prev( 2 );
 	do
 	{
-	    if( fabs( low ) <= t_guess * 1e-6 ||
+	    if( fabs( low ) <= minT ||
 	        fabs(value-value_prev) < EPSILON*this->t_scale )
 	    {
 		std::cerr << "Couldn't adjust low. F(" << low << ") = "
@@ -496,14 +501,6 @@ const
 	// scale the result back to 'normal' size
 	return r0*(this->l_scale);
     }
-    else
-    {
-	// if the initial condition is at the boundary, raise an error
-	// The particle can only be at the boundary in the ABOVE cases
-	THROW_UNLESS( std::invalid_argument,
-	              EPSILON <= r0 && r0 <= (L-EPSILON) );
-    }
-    // else the normal case
     // From here on the problem is well defined
 
 

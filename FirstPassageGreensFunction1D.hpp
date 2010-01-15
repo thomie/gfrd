@@ -30,6 +30,9 @@ private:
     static const Real T_TYPICAL = 1E-6;
     // measure of 'sameness' when comparing floating points numbers
     static const Real EPSILON = 1E-12;
+    // To compute minimal timestep.
+    static const Real MIN_T_FACTOR = 1e-8;
+    static const Real MIN_T = 1e-18;
     //E3; Is 1E3 a good measure for the probability density?!
     static const Real PDENS_TYPICAL = 1;
     // The maximum number of terms in the sum

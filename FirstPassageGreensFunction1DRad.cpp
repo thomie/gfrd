@@ -185,7 +185,7 @@ const
     }
 
     // if you're looking on the boundary
-    if ( fabs (r - L) < EPSILON*L )
+    if ( r == L )
     {
 	return 0.0;
     }
@@ -292,7 +292,7 @@ const
     // if t=0 nothing has happened->no event!!
     THROW_UNLESS( std::invalid_argument, t > 0.0 );
 
-    if ( k == 0 || fabs( r0 - L ) < EPSILON*L )
+    if ( k == 0 || r0 == L )
     {
 	return ESCAPE;
     }
@@ -358,7 +358,7 @@ const Real FirstPassageGreensFunction1DRad::drawTime (const Real rnd) const
 	return INFINITY;
     }
 
-    if ( rnd <= EPSILON || L < 0.0 || fabs(r0 - L) < EPSILON*L )
+    if ( rnd == 0.0 || L < 0.0 || r0 == L )
     {
 	return 0.0;
     }
@@ -408,8 +408,14 @@ const Real FirstPassageGreensFunction1DRad::drawTime (const Real rnd) const
     // Find a good interval to determine the first passage time in
     // get the distance to absorbing boundary (disregard rad BC)
     const Real dist(L-r0);
+
     // construct a guess: msd = sqrt (2*d*D*t)
     const Real t_guess( dist * dist / ( 2. * D ) );
+
+    // Define a minimal time so system does not come to a halt.
+    const Real minT( std::min( this->MIN_T,
+                               t_guess * 1e-6 ) );
+
     Real value( GSL_FN_EVAL( &F, t_guess ) );
     Real low( t_guess );
     Real high( t_guess );
@@ -443,7 +449,7 @@ const Real FirstPassageGreensFunction1DRad::drawTime (const Real rnd) const
 	Real value_prev( 2 );
 	do
 	{
-	    if( fabs( low ) <= t_guess * 1e-6 ||
+	    if( fabs( low ) <= minT ||
 	        fabs(value-value_prev) < EPSILON*1.0 )
 	    {
 		std::cerr << "GF1DRad: Couldn't adjust low. F(" << low << ") = "
