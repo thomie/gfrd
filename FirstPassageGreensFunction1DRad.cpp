@@ -135,6 +135,12 @@ const Real FirstPassageGreensFunction1DRad::p_survival (const Real t) const
 
     do
     {
+	if ( n >= MAX_N_TERMS )
+	{
+	    std::cerr << "Too many terms needed for GF1DRad::p_survival. N: "
+	              << n << std::endl;
+	    break;
+	}
 	An = this->a_n(n);
 	term_prev = term;
 	term = Cn(An, t) * this->An(An) * Bn(An);
