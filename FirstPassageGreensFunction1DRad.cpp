@@ -450,7 +450,7 @@ const Real FirstPassageGreensFunction1DRad::drawTime (const Real rnd) const
 	do
 	{
 	    if( fabs( low ) <= minT ||
-	        fabs(value-value_prev) < EPSILON*1.0 )
+	        fabs(value-value_prev) < EPSILON*this->t_scale )
 	    {
 		std::cerr << "GF1DRad: Couldn't adjust low. F(" << low << ") = "
 		          << value << " t_guess: " << t_guess << " diff: "
