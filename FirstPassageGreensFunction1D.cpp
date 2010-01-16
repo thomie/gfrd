@@ -59,7 +59,7 @@ const Real FirstPassageGreensFunction1D::p_survival (const Real t) const
     // Is 1 a good measure or will this fail at some point?
     while (fabs(term/sum) > EPSILON*1.0 ||
 	fabs(prev_term/sum) > EPSILON*1.0 ||
-	n < MIN_TERMEN );
+	n < MIN_N_TERMS );
 
     return sum*2.0;
 }
@@ -118,7 +118,7 @@ const
     // Is 1E3 a good measure for the probability density?!
     while (fabs(term/sum) > EPSILON*PDENS_TYPICAL ||
 	fabs(prev_term/sum) > EPSILON*PDENS_TYPICAL ||
-	n <= MIN_TERMEN);
+	n <= MIN_N_TERMS);
 
     return sum*2.0/L;
 }
@@ -161,7 +161,7 @@ double FirstPassageGreensFunction1D::drawT_f (double t, void *p)
     }
     while (fabs(term/sum) > EPSILON*tscale ||
 	fabs(prev_term/sum) > EPSILON*tscale ||
-	n <= MIN_TERMEN );
+	n <= MIN_N_TERMS );
 
     // the intersection with the random number
     return 1.0 - 2.0*sum - params->rnd;
@@ -213,7 +213,7 @@ const Real FirstPassageGreensFunction1D::leaves(const Real t) const
     // Is PDENS_TYPICAL a good measure or will this fail at some point?
     while (fabs(term/sum) > EPSILON*PDENS_TYPICAL ||
 	fabs(prev_term/sum) > EPSILON*PDENS_TYPICAL ||
-	n < MIN_TERMEN );
+	n < MIN_N_TERMS );
 
     return D_L_sq*2.0*M_PI*sum;
 }
@@ -264,7 +264,7 @@ const Real FirstPassageGreensFunction1D::leavea(const Real t) const
     // Is PDENS_TYPICAL a good measure or will this fail at some point?
     while (fabs(term/sum) > EPSILON*PDENS_TYPICAL ||
 	fabs(prev_term/sum) > EPSILON*PDENS_TYPICAL ||
-	n < MIN_TERMEN );
+	n < MIN_N_TERMS );
 
     return -D_L_sq*2.0*M_PI*sum;
 }
@@ -477,7 +477,7 @@ double FirstPassageGreensFunction1D::drawR_f (double z, void *p)
     // A lengthscale of 1 if implied here
     while (fabs(term/sum) > EPSILON ||
 	fabs(prev_term/sum) > EPSILON ||
-	n <= MIN_TERMEN );
+	n <= MIN_N_TERMS );
 
     // find the intersection with the random number
     return sum - params->rnd;

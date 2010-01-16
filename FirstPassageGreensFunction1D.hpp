@@ -38,7 +38,7 @@ private:
     // The maximum number of terms in the sum
     static const int MAX_N_TERMS = 500;
     // The minimum
-    static const int MIN_TERMEN = 20;
+    static const int MIN_N_TERMS = 20;
 
 public:
     FirstPassageGreensFunction1D(const Real D)
