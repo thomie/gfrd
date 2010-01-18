@@ -1524,6 +1524,7 @@ const Real FirstPassagePairGreensFunction::drawTime( const Real rnd,
     }
 
     t_guess = dist * dist / ( 6.0 * D );
+    // Todo. Why times .1 here.
     t_guess *= .1;
 
     const Real minT( std::min( sigma * sigma / D * this->MIN_T_FACTOR,

@@ -270,6 +270,7 @@ FirstPassageGreensFunction::p_r_free_F( const Real r,
 }
 
 
+// Todo. Rename to p_int_r_F.
 const Real
 FirstPassageGreensFunction::p_r_F( const Real r,
 				   const p_r_params* params )

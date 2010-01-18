@@ -386,6 +386,8 @@ const Real BasicPairGreensFunction::drawTime( const Real rnd,
 
     gsl_function F = 
 	{
+            // Todo. p_reaction is integral over propensity function, so equal 
+            // to 1 - p_survival I think.
 	    reinterpret_cast<typeof(F.function)>( &p_reaction_F ),
 	    &params 
 	};
