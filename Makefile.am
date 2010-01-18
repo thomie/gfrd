@@ -59,12 +59,16 @@ FreeGreensFunction.hpp\
 FirstPassageGreensFunction.hpp\
 FirstPassageGreensFunction1D.hpp\
 FirstPassageGreensFunction1DRad.hpp\
+OneDimGreensFunctionAbsInf.hpp\
+OneDimGreensFunctionRadInf.hpp\
+OneDimGreensFunctionOneBoundary.hpp\
 FirstPassageGreensFunction2D.hpp\
 BasicPairGreensFunction.hpp\
 FreePairGreensFunction.hpp\
 FirstPassagePairGreensFunction.hpp\
 FirstPassagePairGreensFunction2D.hpp\
 FirstPassageNoCollisionPairGreensFunction.hpp
+
 
 
 
@@ -77,6 +81,9 @@ FreeGreensFunction.cpp\
 FirstPassageGreensFunction.cpp\
 FirstPassageGreensFunction1D.cpp\
 FirstPassageGreensFunction1DRad.cpp\
+OneDimGreensFunctionAbsInf.cpp\
+OneDimGreensFunctionRadInf.cpp\
+OneDimGreensFunctionOneBoundary.cpp\
 FirstPassageGreensFunction2D.cpp\
 BasicPairGreensFunction.cpp\
 FreePairGreensFunction.cpp\
@@ -84,6 +91,7 @@ FirstPassagePairGreensFunction.cpp\
 FirstPassagePairGreensFunction2D.cpp\
 FirstPassageNoCollisionPairGreensFunction.cpp\
 pyGFRD.cpp
+
 
 
 _gfrd_la_LDFLAGS=-module -export-dynamic -avoid-version $(no_undefined)
