@@ -22,6 +22,8 @@
 #include "freeFunctions.hpp"
 #include "FreeGreensFunction.hpp"
 #include "FirstPassageGreensFunction.hpp"
+#include "OneDimGreensFunctionRadInf.hpp"
+#include "OneDimGreensFunctionAbsInf.hpp"
 #include "FirstPassageGreensFunction1D.hpp"
 #include "FirstPassageGreensFunction1DRad.hpp"
 #include "FirstPassageGreensFunction2D.hpp"
@@ -276,6 +278,29 @@ BOOST_PYTHON_MODULE( _gfrd )
         .def( "dump", &FirstPassageGreensFunction::dump )
 	;
 
+    class_<OneDimGreensFunctionAbsInf>( "OneDimGreensFunctionAbsInf",
+					init<const Real>() )
+	.def( "setL", &OneDimGreensFunctionAbsInf::setL )
+	.def( "setr0", &OneDimGreensFunctionAbsInf::setr0 )
+	.def( "drawEventType", &OneDimGreensFunctionAbsInf::drawEventType )
+	.def( "drawTime", &OneDimGreensFunctionAbsInf::drawTime )
+	.def( "drawR", &OneDimGreensFunctionAbsInf::drawR )
+	.def( "p_survival", &OneDimGreensFunctionAbsInf::p_survival )
+	.def( "p_int_r", &OneDimGreensFunctionAbsInf::p_int_r )
+        .def( "dump", &OneDimGreensFunctionAbsInf::dump )
+	;
+
+    class_<OneDimGreensFunctionRadInf>( "OneDimGreensFunctionRadInf",
+					init<const Real, const Real>() )
+	.def( "setL", &OneDimGreensFunctionRadInf::setL )
+	.def( "setr0", &OneDimGreensFunctionRadInf::setr0 )
+	.def( "drawEventType", &OneDimGreensFunctionRadInf::drawEventType )
+	.def( "drawTime", &OneDimGreensFunctionRadInf::drawTime )
+	.def( "drawR", &OneDimGreensFunctionRadInf::drawR )
+	.def( "p_survival", &OneDimGreensFunctionRadInf::p_survival )
+	.def( "p_int_r", &OneDimGreensFunctionRadInf::p_int_r )
+        .def( "dump", &OneDimGreensFunctionRadInf::dump )
+	;
 
     class_<FirstPassageGreensFunction1D>( "FirstPassageGreensFunction1D",
 					init<const Real>() )

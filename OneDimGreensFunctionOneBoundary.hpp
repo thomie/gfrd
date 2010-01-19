@@ -31,6 +31,11 @@ public:
         ; // do nothing
     }
 
+    void setL(const Real L)
+    {
+        ; // Ignore.
+    }
+
     void setr0(const Real r0)
     {
         this->r0 = r0;

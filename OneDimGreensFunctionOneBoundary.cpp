@@ -74,6 +74,8 @@ const Real OneDimGreensFunctionOneBoundary::drawTime (const Real rnd) const
                                t_guess * 1e-6 ) );
 
     Real value( GSL_FN_EVAL( &F, t_guess ) );
+    //Real low( 1e-10 );
+    //Real high( 100 );
     Real low( t_guess );
     Real high( t_guess );
 
@@ -91,7 +93,7 @@ const Real OneDimGreensFunctionOneBoundary::drawTime (const Real rnd) const
 
             if( fabs( high ) >= t_guess * 1e6 )
             {
-                std::cerr << "GF1DRad: Couldn't adjust high. F("
+                std::cerr << std::endl << "GF1DRad: Couldn't adjust high. F("
                           << high << ") = " << value << std::endl;
                 throw std::exception();
             }
@@ -108,7 +110,8 @@ const Real OneDimGreensFunctionOneBoundary::drawTime (const Real rnd) const
             if( fabs( low ) <= minT ||
                 fabs(value-value_prev) < EPSILON * t_scale )
             {
-                std::cerr << "GF1DRad: Couldn't adjust low. F(" << low << ") = "
+                std::cerr << std:: endl
+                          << "GF1DRad: Couldn't adjust low. F(" << low << ") = "
                           << value << " t_guess: " << t_guess << " diff: "
                           << (value - value_prev) << " value: " << value
                           << " value_prev: " << value_prev << " rnd: "
@@ -124,7 +127,6 @@ const Real OneDimGreensFunctionOneBoundary::drawTime (const Real rnd) const
         }
         while ( value >= 0.0 );
     }
-
 
     // Find the intersection on the y-axis between the random number and
     // the function.
@@ -207,7 +209,8 @@ OneDimGreensFunctionOneBoundary::drawR( const Real rnd, const Real t ) const
 
             if( H > 20 )
             {
-                std::cerr << "drawR: H > 20 while adjusting upper bound of r."
+                std::cerr << std::endl
+                          << "drawR: H > 20 while adjusting upper bound of r."
                           << std::endl;
                 throw std::exception();
             }
