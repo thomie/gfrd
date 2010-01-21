@@ -21,6 +21,7 @@ class FreeFunctionsTestCase( unittest.TestCase ):
     def tearDown( self ):
         pass
 
+
     def test_int_p_theta_free_is_ip_theta_free( self ):
 
         import scipy.integrate
@@ -63,6 +64,7 @@ class FreeFunctionsTestCase( unittest.TestCase ):
             ip = result[0]
             self.failIf( ip == 0 )
             self.assertAlmostEqual( 0.0, (S-ip)/ip )
+
 
     def test_int_g_bd_is_I_bd( self ):
 
@@ -165,6 +167,7 @@ class FreeFunctionsTestCase( unittest.TestCase ):
         self.failIf( r <= sigma )
         #print 'rr', r
 
+
     def test_p_reaction_irr_t_inf( self ):
         
         D = 1e-12
@@ -185,6 +188,5 @@ class FreeFunctionsTestCase( unittest.TestCase ):
         self.assertAlmostEqual( pr, prinf )
 
 
-        
 if __name__ == "__main__":
     unittest.main()
