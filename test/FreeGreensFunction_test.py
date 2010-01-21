@@ -26,6 +26,7 @@ class FreeGreensFunctionTestCase( unittest.TestCase ):
         gf = mod.FreeGreensFunction( D )
         self.failIf( gf == None )
 
+
     def test_DrawR( self ):
         D = 1e-12
         
@@ -41,6 +42,7 @@ class FreeGreensFunctionTestCase( unittest.TestCase ):
 
         r = gf.drawR( 1.0, t )
         self.failIf( r < 0.0 )
+
 
     def test_DrawR_zerot_is_zero( self ):
 
@@ -60,19 +62,26 @@ class FreeGreensFunctionTestCase( unittest.TestCase ):
         self.assertEqual( 0.0, r )
 
 
-    def no_test_ip_r_infinity_is_one( self ):
+    def test_ip_r_infinity_is_one( self ):
+        '''Test cumulative distribution function.
 
+        '''
         D = 1e-12
         
         t = 1e-5
         r = 2.5e-8
         
         gf = mod.FreeGreensFunction( D )
-        ip = gf.ip_r( numpy.inf, t )
+        # Integral from 0 to infinity (1e100) should be 1.
+        ip = gf.ip_r( 1e100, t )
         self.assertEqual( 1.0, ip )
 
-    def test_int_p_r_is_ip_r( self ):
 
+    def test_int_p_r_is_ip_r( self ):
+        '''Test cumulative distribution function vs probability density 
+        function.
+
+        '''
         import scipy.integrate
 
         D = 1e-12
@@ -95,3 +104,5 @@ class FreeGreensFunctionTestCase( unittest.TestCase ):
             self.assertAlmostEqual( 0.0, (np-ip)/ip )
 
 
+if __name__ == "__main__":
+    unittest.main()
