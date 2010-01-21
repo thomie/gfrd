@@ -8,11 +8,31 @@
 #include <boost/preprocessor/list/at.hpp>
 #include "array_helper.hpp"
 #include "vmap.hpp"
-#include "sphere.hpp"
-
+#include "position.hpp"
 #include "utils.hpp"
+#include <iostream>
 
-template<typename T_, typename Tkey_,
+/* 
+ * This is the base object_container class. It is quite generic, so for 
+ * example nowhere it is assumed the mapped_type is necessarily a sphere or a 
+ * cylinder.
+ *
+ * This template class is instantiated from 
+ * boost.python/peer/ObjectContainer.hpp with the arguments
+ * <double, key_type, mapped_type, get_mapper_mf>, and is called impl_type 
+ * then.
+ *
+ * Template arguments:
+ *   + T_ (length_type). For example double.
+     + key. For example a type of python object.
+ *   + Tmapped_type_. For example cylinder.
+ *   + MVget_mapper: A class that can be used to create (it specifies) a 
+ *   mapper function between that Tkey_ and that Tmapped_type_. If it is not 
+ *   specified, ::std::map is used.
+ *
+ * Note: a combination of a key and an object is referred to as a value.
+ */
+template<typename T_, typename Tkey_, typename Tmapped_type_,
         template<typename, typename> class MFget_mapper_ =
             get_default_impl::std::template map>
 class object_container
@@ -23,7 +43,12 @@ public:
 
     /* key_type. For example string. */
     typedef Tkey_ key_type;
-    typedef sphere<length_type> mapped_type;
+
+    /* mapped_type. For example cylinder. */
+    typedef Tmapped_type_ mapped_type;
+
+    /* value_type: pair of (key, mapped-type value. For example a key and a 
+     * cylinder.  */
     typedef std::pair<const key_type, mapped_type> value_type;
 
     /* position_type. For example an array of 3 doubles. */
@@ -67,8 +92,12 @@ public:
      * This is used for checking if a key that is inserted is not already 
      * there (i.e. an update). */
     typedef typename MFget_mapper_<key_type, cell_type*>::type
-            id_to_cell_mapper_type;
-    typedef id_to_cell_mapper_type key_to_cell_mapper_type;
+            key_to_cell_mapper_type;
+
+    /* Why was it called id_to_cell_mapper_type before? */
+    //typedef id_to_cell_mapper_type key_to_cell_mapper_type;
+
+
 
 
     /* Iterator base clase.
@@ -354,7 +383,10 @@ public:
      */
     inline std::pair<iterator, bool> insert(const value_type& v)
     {
-        cell_type& c(cell(index(v.second.position)));
+	/* Find cell this key-object pair is going to be in. */
+        cell_type& c(cell(index(v.second.origin)));
+	/* Look for the key in the rmap_ (key to cell mapper). kci is now an 
+	 * iterator for a (key-cell)-pair. */
         typename key_to_cell_mapper_type::iterator kci(rmap_.find(v.first));
         if (rmap_.end() != kci)
         {
@@ -570,18 +602,19 @@ private:
     const length_type world_size_;
     const length_type cell_size_;
     matrix_type matrix_;
-    id_to_cell_mapper_type rmap_;
+    key_to_cell_mapper_type rmap_;
     size_type size_;
 };
 
-template<typename T_, typename Tkey_,
+/* Operator += for a cell_index and a cell_offset. */
+template<typename T_, typename Tkey_, typename mapped_type,
         template<typename, typename> class MFget_mapper_>
-static inline typename object_container<T_, Tkey_, MFget_mapper_>::cell_index_type&
+static inline typename object_container<T_, Tkey_, mapped_type, MFget_mapper_>::cell_index_type&
 operator+=(
        typename object_container<T_,
-                Tkey_, MFget_mapper_>::cell_index_type& lhs,
+                Tkey_, mapped_type, MFget_mapper_>::cell_index_type& lhs,
        const typename object_container<T_,
-                Tkey_, MFget_mapper_>::cell_offset_type& rhs)
+                Tkey_, mapped_type, MFget_mapper_>::cell_offset_type& rhs)
 {
     rhs[0] += lhs[0];
     rhs[1] += lhs[1];

@@ -97,6 +97,37 @@ struct position: public boost::array<T_, 3>
         return std::sqrt(distance_sq(that));
     }
 
+    // If this position is used a vector, what is it's length.
+    const value_type length( ) const{
+        return std::sqrt( std::pow((*this)[0], 2)
+			+ std::pow((*this)[1], 2)
+			+ std::pow((*this)[2], 2));
+    }
+
+
+    // Shouldn't we use some pre-defined vector class?
+    value_type dot_product(const position& that) const
+    {
+        position temp;
+        // Take element-wise product.
+        std::transform(
+            boost::const_begin(*this), boost::const_end(*this),
+            boost::const_begin(that), boost::begin(temp),
+            std::multiplies<value_type>());
+
+        // Sum the result.
+        value_type sum = 0;
+        for(typename base_type::iterator it = temp.begin(); it != temp.end(); ++it) {
+           sum += (*it); 
+        }
+
+        return sum;
+    }
+
+    // Can someone explain to me why we don't just do:
+    // retval[0] = (*this)[0] + (*that)[0];
+    // retval[1] = (*this)[1] + (*that)[1];
+    // retval[2] = (*this)[2] + (*that)[2];
     position operator+(const position& that) const
     {
         position retval;
@@ -104,6 +135,25 @@ struct position: public boost::array<T_, 3>
             boost::const_begin(*this), boost::const_end(*this),
             boost::const_begin(that), boost::begin(retval),
             std::plus<value_type>());
+        return retval;
+    }
+
+    position operator-(const position& that) const
+    {
+        position retval;
+        std::transform(
+            boost::const_begin(*this), boost::const_end(*this),
+            boost::const_begin(that), boost::begin(retval),
+            std::minus<value_type>());
+        return retval;
+    }
+
+    position scale(const value_type multiplier) const
+    {
+        position retval;
+        retval[0] = (*this)[0] * multiplier;
+        retval[1] = (*this)[1] * multiplier;
+        retval[2] = (*this)[2] * multiplier;
         return retval;
     }
 };
