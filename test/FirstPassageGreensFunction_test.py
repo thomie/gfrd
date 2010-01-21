@@ -7,7 +7,9 @@ import numpy
 import _gfrd as mod
 
 class FirstPassageGreensFunctionTestCase( unittest.TestCase ):
+    """
 
+    """
     def setUp(self):
         pass
 
@@ -20,7 +22,11 @@ class FirstPassageGreensFunctionTestCase( unittest.TestCase ):
         gf.seta( 1.0 )
         self.failIf( gf == None )
 
+
     def test_no_shell( self ):
+        '''Not tested for pairs.
+
+        '''
         D = 1e-12
         a = numpy.inf
         gf = mod.FirstPassageGreensFunction( D )
@@ -34,6 +40,9 @@ class FirstPassageGreensFunctionTestCase( unittest.TestCase ):
 
 
     def test_zero_shell( self ):
+        '''Similar to test_DrawTime_a_equal_sigma for pairs.
+
+        '''
         D = 1e-12
         a = 0.0
         gf = mod.FirstPassageGreensFunction( D )
@@ -45,6 +54,23 @@ class FirstPassageGreensFunctionTestCase( unittest.TestCase ):
         self.assertEqual( 0.0, r )
 
 
+    def test_small_shell( self ):
+        '''Similar to test_DrawTime_a_near_sigma for pairs.
+
+        '''
+        D = 1e-12
+        a = 1e-16
+
+        gf = mod.FirstPassageGreensFunction( D )
+        gf.seta( a )
+
+        t = gf.drawTime( 0.5 )
+        self.failIf( t <= 0.0 or t >= numpy.inf )
+
+        r = gf.drawR( 0.5, t )
+        self.failIf( r < 0 or r > a )
+
+
     def test_drawTime( self ):
         D = 1e-12
         a = 1e-7
@@ -52,8 +78,17 @@ class FirstPassageGreensFunctionTestCase( unittest.TestCase ):
         gf.seta( a )
 
         t = gf.drawTime( 0.0 )
+        self.failIf( t <= 0.0 or t >= numpy.inf )
+
         t = gf.drawTime( 0.5 )
-        t = gf.drawTime( 1.0 - 1e-8 )
+        self.failIf( t < 0.0 or t >= numpy.inf )
+
+        t = gf.drawTime( 1e-16 )
+        self.failIf( t <= 0.0 or t >= numpy.inf )
+
+        t = gf.drawTime( 1.0 - 1e-16 )
+        self.failIf( t <= 0.0 or t >= numpy.inf )
+
 
     def test_drawR( self ):
         D = 1e-12
@@ -63,9 +98,23 @@ class FirstPassageGreensFunctionTestCase( unittest.TestCase ):
 
         t = gf.drawTime( 0.5 )
 
-        r = gf.drawR( 0.0, t )
         r = gf.drawR( 0.5, t )
-        r = gf.drawR( 1.0 - 1e-16, t )
+        self.failIf( r < 0 or r > a )
+
+        r1 = gf.drawR( 0.0, t )
+        self.failIf( r1 < 0 or r1 > a )
+
+        # Close to 0 and a.
+        r2 = gf.drawR( 1e-16, t )
+        self.failIf( r2 < 0 or r2 > a )
+
+        r3 = gf.drawR( 1.0 - 1e-16, t )
+        self.failIf( r3 < 0 or r3 > a )
+
+        self.assertAlmostEqual( r1, 0 )
+        self.assertAlmostEqual( r2, 0 )
+        self.assertAlmostEqual( r3, a )
+
 
     def test_drawR_zerot( self ):
         D = 1e-12
@@ -78,11 +127,14 @@ class FirstPassageGreensFunctionTestCase( unittest.TestCase ):
         r = gf.drawR( 0.5, t )
         self.assertEqual( 0.0, r )
 
+
     def test_drawR_smallt( self ):
         D = 1e-12
         a = 1e-8
+
         gf = mod.FirstPassageGreensFunction( D )
         gf.seta( a )
+
         t = gf.drawTime( 0.5 )
 
         while t > 1e-30:
@@ -97,10 +149,14 @@ class FirstPassageGreensFunctionTestCase( unittest.TestCase ):
         a = 1e-3
         gf = mod.FirstPassageGreensFunction( D )
         gf.seta( a )
+
+        # Todo. Is time hardcoded for a reason?
         t = 1e-10
+
         r = gf.drawR( 0.5, t )
         self.failIf( r <= 0.0 )
         self.failIf( r > a )
+
 
     def test_drawR_large_t( self ):
         D = 1e-12
@@ -112,6 +168,7 @@ class FirstPassageGreensFunctionTestCase( unittest.TestCase ):
 
         self.failIf( r <= 0.0 )
         self.failIf( r > a )
+
 
     def test_p_int_r_is_p_int_r_free_with_large_shell( self ):
         D = 1e-12
@@ -138,8 +195,9 @@ class FirstPassageGreensFunctionTestCase( unittest.TestCase ):
 
         p = gf.p_int_r( a, t )
         psurv = gf.p_survival( t )
-        print 'ps', p, psurv
+        #print 'ps', p, psurv
         self.assertAlmostEqual( p, psurv )
+
 
     def test_p_int_r_at_a_is_p_survival_2( self ):
         D = 1e-12
@@ -151,7 +209,7 @@ class FirstPassageGreensFunctionTestCase( unittest.TestCase ):
 
         p = gf.p_int_r( a, t )
         psurv = gf.p_survival( t )
-        print 'ps', p, psurv
+        #print 'ps', p, psurv
         self.assertAlmostEqual( p, psurv )
 
 
