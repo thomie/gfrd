@@ -47,6 +47,9 @@ class FirstPassagePairGreensFunctionTestCase( unittest.TestCase ):
         t = gf.drawTime( 0.0, r0 )
         self.failIf( t < 0.0 or t >= numpy.inf )
 
+        t = gf.drawTime( 1e-16, r0 )
+        self.failIf( t <= 0.0 or t >= numpy.inf )
+
         t = gf.drawTime( 1 - 1e-16, r0 )
         self.failIf( t <= 0.0 or t >= numpy.inf )
 
@@ -64,6 +67,7 @@ class FirstPassagePairGreensFunctionTestCase( unittest.TestCase ):
         t = gf.drawTime( 0.5, r0 )
         self.assertEqual( 0.0, t )
 
+
     def test_DrawTime_a_near_sigma( self ):
         D = 1e-12
         kf = 1e-8
@@ -77,6 +81,7 @@ class FirstPassagePairGreensFunctionTestCase( unittest.TestCase ):
         t = gf.drawTime( 0.5, r0 )
         self.failIf( t <= 0.0 or t >= numpy.inf )
 
+
     def test_DrawTime_r0_equal_a( self ):
         D = 1e-12
         kf = 1e-8
@@ -89,6 +94,26 @@ class FirstPassagePairGreensFunctionTestCase( unittest.TestCase ):
 
         t = gf.drawTime( 0.5, r0 )
         self.assertEqual( 0.0, t )
+
+
+    def no_test_DrawTime_r0_near_a( self ):
+        '''Near right boundary.
+
+        This is very slow, so we use FirstPassageNoCollissionGreensFunction.
+
+        '''
+        D = 1e-12
+        kf = 1e-8
+        sigma = 1e-8
+        a = 1e-7
+        r0 = a - (a - sigma) * 1e-6
+
+        gf = mod.FirstPassagePairGreensFunction( D, kf, sigma )
+        gf.seta( a )
+
+        t = gf.drawTime( 0.5, r0 )
+        self.failIf( t <= 0.0 or t >= numpy.inf )
+
 
     def test_DrawTime_r0_equal_sigma_kf_zero( self ):
         D = 1e-12
@@ -104,7 +129,7 @@ class FirstPassagePairGreensFunctionTestCase( unittest.TestCase ):
         self.failIf( t < 0.0 or t >= numpy.inf )
 
 
-    def no_test_DrawTime_r0_equal_sigma_kf_large( self ):
+    def test_DrawTime_r0_equal_sigma_kf_large( self ):
         D = 1e-12
         kf = 1e-8
         sigma = 1e-8
@@ -116,6 +141,24 @@ class FirstPassagePairGreensFunctionTestCase( unittest.TestCase ):
 
         t = gf.drawTime( 0.5, r0 )
         self.failIf( t < 0.0 or t >= numpy.inf )
+
+
+    def test_DrawTime_r0_near_sigma( self ):
+        '''Near left boundary.
+
+        No problem, even for large a.
+        '''
+        D = 1e-12
+        kf = 1e-8
+        sigma = 1e-8
+        a = 1e-3
+        r0 = sigma + (a - sigma) * 1e-6
+
+        gf = mod.FirstPassagePairGreensFunction( D, kf, sigma )
+        gf.seta( a )
+
+        t = gf.drawTime( 0.5, r0 )
+        self.failIf( t <= 0.0 or t >= numpy.inf )
 
 
     def test_DrawEventType( self ):
@@ -139,7 +182,7 @@ class FirstPassagePairGreensFunctionTestCase( unittest.TestCase ):
         self.assertEqual( eventType, 1 )
 
 
-    def no_test_DrawEventType_smallt( self ):
+    def test_DrawEventType_smallt( self ):
         D = 1e-12
         kf = 1e-8
         sigma = 1e-8
@@ -346,6 +389,7 @@ class FirstPassagePairGreensFunctionTestCase( unittest.TestCase ):
         r = gf.drawR( 0.5, r0, t )
         self.failIf( r < sigma or r > a )
 
+
     def test_DrawR_squeezed( self ):
 
         D = 1e-12
@@ -412,6 +456,7 @@ class FirstPassagePairGreensFunctionTestCase( unittest.TestCase ):
         t = 0.0
         theta = gf.drawTheta( 0.5, r0, r0, t )
         self.assertEqual( 0.0, theta )
+
 
     def test_DrawTheta_smallt( self ):
 
@@ -496,6 +541,7 @@ class FirstPassagePairGreensFunctionTestCase( unittest.TestCase ):
         theta = gf.drawTheta( 0.5, r, r0, t )
         self.failIf( theta < 0.0 or theta > numpy.pi )
 
+
     def test_DrawTheta_r_equal_a( self ):
         D = 1e-12
         kf = 1e-8
@@ -511,6 +557,7 @@ class FirstPassagePairGreensFunctionTestCase( unittest.TestCase ):
 
         theta = gf.drawTheta( 0.5, r, r0, t )
         self.failIf( theta < 0.0 or theta > numpy.pi )
+
 
     def test_DrawTheta_1( self ):
         r0 =  1.0206416181e-07
@@ -804,6 +851,7 @@ class FirstPassagePairGreensFunctionTestCase( unittest.TestCase ):
             pint = gf.ip_theta( theta, r, r0, t )
             self.failIf( pint < pint_prev )
             pint_prev = pint
+
 
     def test_int_dp_theta_at_a_is_leavea( self ):
 
