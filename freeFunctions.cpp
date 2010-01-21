@@ -56,6 +56,7 @@ const Real W( const Real a, const Real b )
     return exp( - a * a ) * expxsq_erfc( a + b );
 }
 
+
 const Real 
 __p_irr( const Real r,
          const Real t,
@@ -87,6 +88,8 @@ __p_irr( const Real r,
     return result * jacobian;
 }
 
+
+/* Only used in BasicPairGreensFunction. */
 const Real 
 p_irr( const Real r,
        const Real t,
@@ -104,6 +107,7 @@ p_irr( const Real r,
 }
 
 
+/* Only used in FirstPassagePairGreensFunction.cpp. */
 const Real p_survival_irr( const Real t, const Real r0,
                            const Real kf, const Real D, const Real sigma )
 {
@@ -115,6 +119,7 @@ const Real p_survival_irr( const Real t, const Real r0,
     return 1.0 - p;
 }
 
+/* Only used in BasicPairGreensFunction.cpp. */
 const Real 
 __p_reaction_irr( const Real t, const Real r0,
                   const Real kf, const Real D, const Real sigma,
@@ -133,6 +138,8 @@ __p_reaction_irr( const Real t, const Real r0,
 }
 
 
+/* __p_reaction_irr_t_inf is Pythonified in pyGFRD.cpp and used in 
+ * test/freeFunctions_test.py. */
 const Real 
 __p_reaction_irr_t_inf( const Real r0, const Real kf, 
                         const Real sigma, const Real kD )
@@ -142,6 +149,8 @@ __p_reaction_irr_t_inf( const Real r0, const Real kf,
 }
 
 
+/* Used in FirstPassageNoCollisionPairGreensFunction.cpp and 
+ * FirstPassagePairGreensFunction.cpp. */
 const Real
 p_survival_nocollision( const Real t,
                         const Real r0,
@@ -190,6 +199,8 @@ p_survival_nocollision( const Real t,
     return p * factor;
 }
 
+
+/* Only used in FirstPassageNoCollisionPairGreensFunction.cpp. */
 const Real
 dp_survival_nocollision( const Real t,
                          const Real r0,
@@ -239,74 +250,8 @@ dp_survival_nocollision( const Real t,
 }
 
 
-
-/*
-const Real p_survival_irr_deriv( const Real tsqrt, 
-                        const Real r0 ) const
-{
-    const Real Sigma( this->getSigma() );
-    const Real D( this->getD() );
-    const Real alpha( this->getalpha() );
-    const Real kD( this->getkD() );
-    const Real kf( this->getkf() );
-
-    const Real sqrtD( sqrt( D ) );
-    const Real sqrtPI( sqrt( M_PI ) );
-
-    const Real r0_m_Sigma_t_over_sqrt4D( ( r0 - Sigma ) * tsqrt / 
-					 ( sqrtD + sqrtD ) );
-    const Real Wf( W( r0_m_Sigma_t_over_sqrt4D, alpha * tsqrt ) );
-
-    const Real num1( sqrtD * exp( - gsl_pow_2( r0_m_Sigma_t_over_sqrt4D ) ) );
-    const Real num2( ( sqrtPI * tsqrt * ( alpha * sqrtD + r0 - Sigma ) ) * Wf );
-
-    const Real factor( ( alpha + alpha ) * kf * Sigma /
-		       ( sqrtPI * sqrtD * r0 * ( kf + kD ) ) );
-  
-    return ( num1 - num2 ) * factor;
-}
-
-void
-p_survival_irr_fdf( const Real tsqrt, 
-					 const Real r0,
-					 Real* const f, Real* const df ) const
-{
-    const Real kD( this->getkD() );
-    const Real kf( this->getkf() );
-    const Real Sigma( this->getSigma() );
-    const Real D( this->getD() );
-    const Real alpha( this->getalpha() );
-
-    const Real sqrtD( sqrt ( D ) );
-
-    const Real r0_m_Sigma_over_sqrt4D( ( r0 - Sigma ) / ( sqrtD + sqrtD ) );
-    const Real factor( Sigma * kf / ( r0 * ( kf + kD ) ) );
-
-    {
-	const Real r0_m_Sigma_over_sqrt4D_t( r0_m_Sigma_over_sqrt4D / tsqrt );
-	const Real Wf( W( r0_m_Sigma_over_sqrt4D_t, alpha * tsqrt ) );
-
-	*f = factor * ( erfc( r0_m_Sigma_over_sqrt4D_t ) - Wf );
-    }
-
-    {
-	const Real r0_m_Sigma_t_over_sqrt4D( r0_m_Sigma_over_sqrt4D * tsqrt );
-	const Real Wdf( W( r0_m_Sigma_t_over_sqrt4D, alpha * tsqrt ) );
-	const Real sqrtPI( sqrt( M_PI ) );
-
-	const Real dfnum1( sqrtD * 
-			   exp( - gsl_pow_2( r0_m_Sigma_t_over_sqrt4D ) ) );
-	const Real dfnum2( ( sqrtPI * tsqrt * ( alpha * sqrtD + r0 - Sigma ) ) 
-			   * Wdf );
-    
-	const Real dffactor( ( alpha * M_2_SQRTPI / sqrtD ) * factor );
-    
-	*df = ( dfnum1 - dfnum2 ) * dffactor;
-    }
-}
-*/
-
-
+/* These 2 functions are used BasicPairGreensFunction and 
+ * FreePairGreensFunction and FirstPassagePairGreensFunction_test. */
 const Real p_theta_free( const Real theta, const Real r, const Real r0, 
                          const Real t, const Real D )
 {
@@ -323,6 +268,7 @@ const Real p_theta_free( const Real theta, const Real r, const Real r0,
 
     return term1 * term2 * sin_theta; // jacobian
 }
+
 
 const Real ip_theta_free( const Real theta, const Real r, const Real r0,
                           const Real t, const Real D )
@@ -346,7 +292,7 @@ const Real ip_theta_free( const Real theta, const Real r, const Real r0,
 }
 
 
-
+/* Functions below here are used for Brownian Dynamics. */
 const Real g_bd( const Real r, const Real sigma, const Real t, const Real D )
 {
     const Real Dt4( 4.0 * D * t );
@@ -365,6 +311,7 @@ const Real g_bd( const Real r, const Real sigma, const Real t, const Real D )
 
     return 0.5 * ( term1 + term2 ) * r * r;
 }
+
     
 const Real I_bd( const Real sigma, const Real t, const Real D )
 {
@@ -455,6 +402,7 @@ static const Real I_gbd_r_F( const Real r,
     //printf("I %g\n",I_bd_r( r, sigma, t, D ) - target);
     return I_bd_r( r, sigma, t, D ) - target;
 }
+
 
 const Real drawR_gbd( const Real rnd, const Real sigma, 
                       const Real t, const Real D )
