@@ -663,6 +663,8 @@ FirstPassageNoCollisionPairGreensFunction::drawTime( const Real rnd,
 
 	printf( "drawTime: adjusting low: %g, F = %g\n", low, low_value_new );
 
+	// Not using a guess here. Different from 
+	// FirstPassagePairGreensFunction. 
 	if( fabs( low ) <= this->MIN_T || 
             fabs( low_value - low_value_new ) < TOLERANCE ) 
 	{
