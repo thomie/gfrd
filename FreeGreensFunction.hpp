@@ -8,7 +8,7 @@
 #include "GreensFunction.hpp"
 
 /**
-  Green's Function for a free diffusion particle.
+  Green's Function for a free diffusion particle in 3D.
 */
 
 class FreeGreensFunction

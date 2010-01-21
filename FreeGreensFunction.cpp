@@ -4,12 +4,10 @@
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_roots.h>
 
-
 #include "FreeGreensFunction.hpp"
 
 
-
-
+/* Probability density function. */
 const Real 
 FreeGreensFunction::p_r( const Real r, 
                          const Real t ) const
@@ -28,6 +26,8 @@ FreeGreensFunction::p_r( const Real r,
     return jacobian * term1 * term2;
 }
 
+
+/* Cumulative distribution function. */
 const Real 
 FreeGreensFunction::ip_r( const Real r, 
                           const Real t ) const
@@ -44,6 +44,7 @@ FreeGreensFunction::ip_r( const Real r,
     return term2 - term1;
 }
 
+
 const Real
 FreeGreensFunction::ip_r_F( const Real r,
                             const ip_r_params* params )
@@ -54,7 +55,6 @@ FreeGreensFunction::ip_r_F( const Real r,
 
     return gf->ip_r( r, t ) - value;
 }
-
 
 
 const Real 
@@ -116,7 +116,7 @@ FreeGreensFunction::drawR( const Real rnd, const Real t ) const
 
 	++i;
     }
-  
+
     //printf("%d\n", i );
 
     const Real r( gsl_root_fsolver_root( solver ) );
