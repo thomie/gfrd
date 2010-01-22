@@ -3,7 +3,7 @@ CPPFLAGS=-I$(SRCDIR)
 CXXFLAGS=-g -Werror
 LDFLAGS=
 
-all: vmap_test object_container_test array_helper_test filters_test position_test
+all: vmap_test object_container_test cylinder_container_test array_helper_test filters_test position_test
 
 clean:
 	rm -f *.o *.so *.lo *.loT
@@ -19,6 +19,9 @@ vmap_test: vmap_test.cpp $(SRCDIR)/vmap.hpp
 
 object_container_test: object_container_test.cpp $(SRCDIR)/object_container.hpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ object_container_test.cpp
+
+cylinder_container_test: cylinder_container_test.cpp $(SRCDIR)/object_container.hpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ cylinder_container_test.cpp
 
 array_helper_test: array_helper_test.cpp $(SRCDIR)/array_helper.hpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ array_helper_test.cpp
