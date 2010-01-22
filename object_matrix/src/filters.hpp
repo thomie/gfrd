@@ -61,10 +61,19 @@ class cyclic_neighbor_filter
     typedef void result_type;
 
 public:
+    // Called via some steps from neighbors_array().
+    // Arguments are:
+    //	+ next=original collector in which results will be stored.
+    //	+ cmp=sphere with position and radius.
+    // Objects within the sphere are selected.
     inline cyclic_neighbor_filter(Tfun_& next,
             const typename Toc_::mapped_type& cmp)
         : next_(next), cmp_(cmp) {}
 
+    // Called from each_neighbor_cyclic_loops in object_container.hpp.
+    // Arguments are:
+    //	+ i=iterator
+    //	+ p=position_offset.
     inline result_type operator()(first_argument_type i,
             second_argument_type p) const
     {
@@ -72,9 +81,14 @@ public:
 
         if (cmp_ == item.second)
         {
+	    // In case cmp_, the 'virtual' sphere', is actually an object in  
+	    // our matrix (i.e the matrix also contains a sphere at the same 
+	    // position and with the same radius as cmp), don't include it.  
             return;
         }
 
+	// Calculate distance from position of sphere to the shell of the ith 
+	// item.
         const double dist(
             // FIXME: something's wrong
             const_cast<position<double>& >(cmp_.position)
@@ -82,8 +96,11 @@ public:
             - item.second.radius);
         if (dist < cmp_.radius)
         {
+	    // If distance is within the radius of the sphere, add i to 
+	    // collector.
             next_(i, dist);
         }
+	    // Else: object i is not within the radius of sphere cmp_.
     }
 
 private:

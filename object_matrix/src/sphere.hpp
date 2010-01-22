@@ -4,6 +4,7 @@
 #include <ostream>
 #include "position.hpp"
 
+/* A sphere has an origin and a size (radius). */
 template<typename T_>
 struct sphere
 {

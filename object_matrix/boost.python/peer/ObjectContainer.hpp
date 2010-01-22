@@ -1,6 +1,8 @@
 #ifndef OBJECTMATRIX_PEER_OBJECTCONTAINER_HPP
 #define OBJECTMATRIX_PEER_OBJECTCONTAINER_HPP
 
+
+
 #include "../../../config.h"
 
 #include <functional>
@@ -44,6 +46,11 @@
 
 namespace peer {
 
+/* get_mapper_mf
+ *
+ * Can be used to *produce* a mapper function between keys of type TKey_ and 
+ * objects of type Tval_.
+ */
 template<typename Tkey_, typename Tval_>
 struct get_mapper_mf
 {
@@ -58,6 +65,10 @@ struct get_mapper_mf
 #endif
 };
 
+/* Partial template specialization of get_mapper_mf.
+ *
+ * Keys are python objects.
+ */
 template<typename Tval_>
 struct get_mapper_mf<boost::python::object, Tval_>
 {
@@ -110,6 +121,7 @@ public:
                 impl_type::reference, position_type::value_type, void>
         {
         public:
+	    // These 2 typedefs are not used?
             typedef impl_type::iterator first_argument_type;
             typedef position_type::value_type second_argument_type;
             typedef void result_type;
@@ -135,6 +147,9 @@ public:
         };
 
     public:
+	// Todo.
+	// When converting from spheres to cylinders, don't care about these  
+	// 2 methods, they are called from a part we're not using.
         inline static Enumerator<const result_type&>* enumerate_neighbors(
             ObjectContainer& cntnr, const mapped_type& sphere)
         {
@@ -207,6 +222,7 @@ public:
             {
                 //sa_.push_back(i);
                 ka_.push_back((*i).first);
+                //// Distance already calculated, just store it.
                 da_.push_back(d);
             }
 
@@ -261,15 +277,20 @@ public:
         build_neighbors_array(result_type& retval,
                               ObjectContainer& cntnr, const mapped_type& sphere)
         {
+            //// Collect all objects from cntnr that lie within sphere.
             collector col(retval);
             take_neighbor(cntnr.impl_, col, sphere);
         }
 
+        //// Called via some steps from  
+        //// subSpaceSimulator.getNeighborsWithinRadiusNoSort().
         inline static void
         build_neighbors_array_cyclic(result_type& retval,
                 ObjectContainer& cntnr, const mapped_type& sphere)
         {
+            //// Note: collector, not all_neighbors_collector.
             collector col(retval);
+            //// This take_neighbor_cyclic is implemented in filters.hpp.
             take_neighbor_cyclic(cntnr.impl_, col, sphere);
         }
 
@@ -281,11 +302,15 @@ public:
             cntnr.impl_.each_neighbor(cntnr.impl_.index(pos), col);
         }
 
+        //// Called via some steps from subSpaceSimulator.getNeighbors().
         inline static void
         build_all_neighbors_array_cyclic(result_type& retval,
                 ObjectContainer& cntnr, const position_type& pos)
         {
             all_neighbors_collector col(retval, pos);
+            //// cntnr refers to *this from all_neighbors_array_cyclic,
+            //// so cntnr.impl_ is a implemented object_container from 
+            //// object_container.hpp.
             cntnr.impl_.each_neighbor_cyclic(cntnr.impl_.index(pos), col);
         }
 
@@ -320,6 +345,9 @@ public:
     }
 
 #if OBJECTMATRIX_USE_ITERATOR
+    //// Todo.
+    //// When converting from spheres to cylinders, don't care about this part 
+    //// because we're not using this iterneighbors.
     Enumerator<const Generators::result_type&>* iterneighbors(
             const sphere<double>& sphere)
     {
@@ -451,6 +479,7 @@ public:
         return impl_;
     }
 
+    // Pythonify.
     inline static void __register_class()
     {
         using namespace boost::python;
