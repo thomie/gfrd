@@ -29,4 +29,4 @@ filters_test: filters_test.cpp $(SRCDIR)/filters.hpp $(SRCDIR)/object_container.
 position_test: position_test.cpp $(SRCDIR)/position.hpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ position_test.cpp
 
-.PHONY: all clean
+.PHONY: all clean 

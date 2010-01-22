@@ -27,6 +27,13 @@ BOOST_AUTO_TEST_CASE(basic)
     oc.insert(std::make_pair(3, oc_type::mapped_type(pos(0.9, 0.95, 0.4), 0.1)));
 
     collector<oc_type> col;
+    // Construct an iterator for object 1 in oc.
     oc_type::const_iterator f(oc.find(1));
+    // Collect all objects from oc that lie within the radius of object 1.
+    // The shell of object 0 is at a distance sqrt(2*0.1*0.1) - 0.15 = 
+    // -0.0087864..
+    // The shell of the objects itself is at a distance -0.05 (Yes it returns 
+    // itself also).
+    // Objects 2 and 3 should not be found.
     take_neighbor(oc, col, (*f).second);
 }
