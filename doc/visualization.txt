@@ -1,5 +1,3 @@
-Visualization
-=============
 
 
 Setting up the simulation
@@ -8,21 +6,19 @@ Setting up the simulation
 * Setup the vtklogger like this in your simulation script (also see 
   \<egfrdDirectory\>/samples/example/example.py):
 
-	{% highlight python %}
-
-        s.initialize()
-        vtklogger = VTKLogger(s, '<mySimulationDataDirectory>')
-        while(True):
-            try:
-                vtklogger.log()
-                s.step()
-            except RuntimeError, message:
-                print 'Error.', message
-                break
-        vtklogger.stop()
-        s.stop(s.t)
-
-	{% endhighlight %}
+{% highlight python %}
+s.initialize()
+vtklogger = VTKLogger(s, '<mySimulationDataDirectory>')
+while(True):
+    try:
+	vtklogger.log()
+	s.step()
+    except RuntimeError, message:
+	print 'Error.', message
+	break
+vtklogger.stop()
+s.stop(s.t)
+{% endhighlight %}
 
 * Replace '\<mySimulationDataDirectory\>' by a descriptive name for each 
   simulation that you run. It can be a nested directory structure, like 
@@ -34,16 +30,22 @@ Setting up the simulation
 
 Configuration options to VTKLogger
 ----------------------------------
-* bufferSize=None  
+{% highlight python %}
+bufferSize=None  
+{% endhighlight %}
 By default the simulation data files are written directly during the 
 simulation. By specifying a bufferSize, all data is stored in a buffer during 
 the simulation, and the VTKLogger only writes the data for the last 
 'bufferSize' simulation steps after the simulation has finished. 
 
-* brownian=False  
+{% highlight python %}
+brownian=False  
+{% endhighlight %}
 If brownian is set to True, no shell data is written.
 
-* extraParticleStep=True  
+{% highlight python %}
+extraParticleStep=True  
+{% endhighlight %}
 By default the VTKLogger writes 2 visualization steps for each simulation 
 step. In the first visualization step only the active particle is updated, in 
 the second visualization step the active shell is updated (and the next shell 
@@ -56,7 +58,9 @@ Running the simulation
 ----------------------
 * Run the simulation script. 
 
-  PYTHONPATH=../../ python run.py
+{% highlight python %}
+PYTHONPATH=../../ python run.py
+{% endhighlight %}
 
 * This should produce the files static.pvd and files.pvd inside the 
   simulation data directory specified in your simulation script. The former 

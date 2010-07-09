@@ -1,15 +1,12 @@
 
-GFRD Simulator
-==============
-
 E-Cell Particle Dynamics Prototype
 
-Copyright (C) 2008-2010 RIKEN
-Copyright (C) 2009-2010 AMOLF
+Copyright (C) 2008-2010 RIKEN  
+Copyright (C) 2009-2010 AMOLF  
 Copyright (C) 2005-2008 The Molecular Sciences Institute
 
 
-About this package
+EGFRD Simulator
 ------------------------
 
 This package is started of from version 0.3 of the E-Cell Particle Dynamics
@@ -40,15 +37,13 @@ Morrelli and ten Wolde[3].
 
 Authors
 ------------------------
-
-(alphabetical order)
-Nils Becker
-Laurens Bossen
-Kazunari Kaizu
-Moriyoshi Koizumi
-Thomase Miedema
-Thomas Sokolowski
-Koichi Takahashi
+- Nils Becker
+- Laurens Bossen
+- Kazunari Kaizu
+- Moriyoshi Koizumi
+- Thomase Miedema
+- Thomas Sokolowski
+- Koichi Takahashi
 
 License
 ------------------------
