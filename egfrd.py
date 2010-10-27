@@ -824,26 +824,22 @@ class EGFRDSimulator( ParticleSimulatorBase ):
         return interaction
 
 
-    def tryInteraction( self, single, surface ):
-        """Todo: bursting of cylindrical volume using 
-        CYLINDER_BURST_RADIUS_FACTOR and CYLINDER_BURST_SIZE_FACTOR.
-
-        """
+    def tryInteraction(self, single, surface):
         particle = single.particle
 
         # Cyclic transpose needed when calling surface.projectedPoint!
-        posTransposed = cyclicTranspose( single.pos, surface.origin, 
-                                         self.worldSize )
+        posTransposed = cyclicTranspose(single.pos, surface.origin, 
+                                        self.worldSize)
         projectedPoint, projectionDistance = \
-            surface.projectedPoint( posTransposed )
+                surface.projectedPoint(posTransposed)
 
         # For interaction with a planar surface, decide orientation. 
-        orientationVector = cmp( projectionDistance, 0 ) * surface.unitZ 
-        particleDistance = abs( projectionDistance )
+        orientationVector = cmp(projectionDistance, 0) * surface.unitZ 
+        particleDistance = abs(projectionDistance)
 
-        log.debug( '        *tryInteraction: %s +\n'
-                   '                         %s. particleDistance = %.10g' %
-                   ( particle, surface, particleDistance ) )
+        log.debug('        *tryInteraction: %s +\n'
+                  '                         %s. particleDistance = %.10g' %
+                  (particle, surface, particleDistance))
 
         particleRadius = particle.species.radius
 
@@ -854,25 +850,25 @@ class EGFRDSimulator( ParticleSimulatorBase ):
         # * dr is the radius of the cylinder.
         # * dzLeft determines how much the cylinder is sticking out on the 
         # other side of the surface, measured from the projected point.
-        # * dzRight is the distance between the particle and the edge of the 
-        # cylinder in the z direction.
+        # * dzRight is the distance between the particle position and 
+        # the edge of the cylinder in the z direction.
         #
         # For interaction with a CylindricalSurface (dna):
-        # * dr is the distance between the particle and the edge of the 
-        # cylinder in the r direction.
+        # * dr is the distance between the particle position and the 
+        # edge of the cylinder in the r direction.
         # * dzLeft is the distance from the projected point to the left edge 
         # of the cylinder.
         # * dzRight is the distance from the projected point to the right edge 
         # of the cylinder.
 
-        if isinstance( surface, PlanarSurface ):
+        if isinstance(surface, PlanarSurface):
             dr = self.getMaxShellSize() # Free diffusion, so like free single.
             dzLeft = self.getMaxShellSize() # Doesn't matter much.
 
             # Todo. Note that after an unbinding,
             # r0 = MINIMAL_SEPERATION_FACTOR * (particleRadius + surface.Lz), 
-            # which is very small. For now: allow for a domain that has a size 
-            # of: r0 + ( MAX_DOMAIN_SIZE_FACTOR * r0 ).
+            # which is very small. For now: allow for a domain that has 
+            # a size of: r0 + (MAX_DOMAIN_SIZE_FACTOR * r0).
             # The proper solution is to implement Greens function where either 
             # boundary is ignored, like in the 3D case.
             r0 = particleDistance - particleRadius - surface.Lz
@@ -880,13 +876,13 @@ class EGFRDSimulator( ParticleSimulatorBase ):
 
             # Make sure the cylinder stays within 1 cell.
             # Todo. Assert that other surfaces are not too close.
-            dzRight = min( dzRight, 
-                           self.getMaxShellSize() * 2 - particleDistance )
+            dzRight = min(dzRight, 
+                          self.getMaxShellSize() * 2 - particleDistance)
 
-        elif isinstance( surface, CylindricalSurface ):
+        elif isinstance(surface, CylindricalSurface):
             # Todo. Assert that other surfaces are not too close.
             dr = surface.radius + particleRadius * \
-                ( MINIMAL_SINGLE_RADIUS_FACTOR + SURFACE_SAFETY_ZONE ) + \
+                (MINIMAL_SINGLE_RADIUS_FACTOR + SURFACE_SAFETY_ZONE) + \
                 particleRadius * MINIMAL_SEPERATION_FACTOR - particleDistance 
 
             dzLeft = self.getMaxShellSize() # Free diffusion, like free single.
@@ -894,12 +890,12 @@ class EGFRDSimulator( ParticleSimulatorBase ):
 
         # Miedema's algorithm.
         dr, dzLeft, dzRight = \
-            self.determineOptimalCylinder( single, projectedPoint,
-                                           orientationVector, dr, dzLeft, 
-                                           dzRight, surface, particleDistance )
+            self.determineOptimalCylinder(single, projectedPoint,
+                                          orientationVector, dr, dzLeft, 
+                                          dzRight, surface, particleDistance)
 
         # Decide minimal dr, dzleft, dzright.
-        if isinstance( surface, PlanarSurface ):
+        if isinstance(surface, PlanarSurface):
             # Free diffusion in r, same as for single.
             mindr = particleRadius * MINIMAL_SINGLE_RADIUS_FACTOR
             # Leave enough for particle itself.
@@ -910,7 +906,7 @@ class EGFRDSimulator( ParticleSimulatorBase ):
             # SURFACE_SAFETY_ZONE.
             mindzRight = particleRadius * MINIMAL_SEPERATION_FACTOR
 
-        elif isinstance( surface, CylindricalSurface ):
+        elif isinstance(surface, CylindricalSurface):
             # Todo. Make sure that after an escape through the r-domain of a 
             # CylindricalSurfaceInteraction there is at least enough space to 
             # make a spherical single. Use MINIMAL_SINGLE_RADIUS_FACTOR and 
@@ -921,14 +917,14 @@ class EGFRDSimulator( ParticleSimulatorBase ):
             mindzRight = particleRadius * MINIMAL_SINGLE_RADIUS_FACTOR
 
         if dr < mindr or dzLeft < mindzLeft or dzRight < mindzRight:
-            log.debug( '        *Interaction not possible:\n'
-                       '            %s +\n'
-                       '            %s.\n'
-                       '            dr = %.3g. mindr = %.3g.\n'
-                       '            dzLeft = %.3g. mindzLeft = %.3g.\n'
-                       '            dzRight = %.3g. mindzRight = %.3g.' %
-                       ( single, surface, dr, mindr, dzLeft, mindzLeft, 
-                         dzRight, mindzRight ) )
+            log.debug('        *Interaction not possible:\n'
+                      '            %s +\n'
+                      '            %s.\n'
+                      '            dr = %.3g. mindr = %.3g.\n'
+                      '            dzLeft = %.3g. mindzLeft = %.3g.\n'
+                      '            dzRight = %.3g. mindzRight = %.3g.' %
+                      (single, surface, dr, mindr, dzLeft, mindzLeft, 
+                       dzRight, mindzRight))
             return None
 
         # Compute radius and size of new cylinder.
@@ -936,7 +932,7 @@ class EGFRDSimulator( ParticleSimulatorBase ):
         # Todo. Let radius and size of cylinder also depend on distance 
         # towards the closest particle, taking into account the diffusion 
         # constants like in updateSingle.
-        if isinstance( surface, PlanarSurface ):
+        if isinstance(surface, PlanarSurface):
             radius = dr
             # On the other side (left side) than the particle's side, make 
             # sure there is just enough space for the particle to stick out, 
@@ -945,53 +941,53 @@ class EGFRDSimulator( ParticleSimulatorBase ):
             # Heads up: sizeOfDomain is really different from size of 
             # cylinder!
             sizeOfDomain = particleDistance + dzRight - surface.Lz
-            size = ( particleDistance + dzLeft + dzRight ) / 2
-        elif isinstance( surface, CylindricalSurface ):
+            size = (particleDistance + dzLeft + dzRight) / 2
+        elif isinstance(surface, CylindricalSurface):
             radius = dr + particleDistance
             # sizeOfDomain is size of cylinder * 2.
             sizeOfDomain = dzLeft + dzRight
-            size = ( sizeOfDomain ) / 2
+            size = (sizeOfDomain) / 2
 
         # Compute new origin of cylinder.
         shiftZ = size - dzLeft
         origin = projectedPoint + shiftZ * orientationVector
 
-        if isinstance( surface, PlanarSurface ):
+        if isinstance(surface, PlanarSurface):
             # Compute new particle offset relative to origin of the domain in 
             # the z-direction (z = 0), which is *at* the surface boundary. (z 
             # = L) is at the end of the cylinder.
             # (minRadius correction in the constructor).
-            particleOffset = [ 0, particleDistance - surface.Lz ]
-        if isinstance( surface, CylindricalSurface ):
+            particleOffset = [0, particleDistance - surface.Lz]
+        if isinstance(surface, CylindricalSurface):
             # Compute new particle offset in r and z-direction relative to 
             # origin of new cylinder. In the z-direction, the origin (z = 0) 
             # is at the left boundary. z = L is at the right boundary.
             # (minRadius correction in the constructor).
-            particleOffset = [ particleDistance, dzLeft ]
+            particleOffset = [particleDistance, dzLeft]
 
-        log.debug( '        *createInteraction\n'
-                   '            dzLeft = %.3g. dzRight = %.3g.\n'
-                   '            particleOffset = [ %.3g, %.3g ].\n'
-                   '            sizeOfDomain = %.3g.' % 
-                   ( dzLeft, dzRight, particleOffset[0], particleOffset[1], 
-                     sizeOfDomain ) )
+        log.debug('        *createInteraction\n'
+                  '            dzLeft = %.3g. dzRight = %.3g.\n'
+                  '            particleOffset = [%.3g, %.3g].\n'
+                  '            sizeOfDomain = %.3g.' % 
+                  (dzLeft, dzRight, particleOffset[0], particleOffset[1], 
+                   sizeOfDomain))
 
-        return self.createInteraction( single, surface, origin, radius,
-                                       orientationVector, size, particleOffset, 
-                                       projectedPoint, sizeOfDomain )
+        return self.createInteraction(single, surface, origin, radius,
+                                      orientationVector, size, particleOffset, 
+                                      projectedPoint, sizeOfDomain)
 
 
-    def determineOptimalCylinder( self, single, projectedPoint, 
-                                  orientationVector, dr, dzLeft, dzRight, 
-                                  surface=None, particleDistance=None ):
+    def determineOptimalCylinder(self, single, projectedPoint, 
+                                 orientationVector, dr, dzLeft, dzRight, 
+                                 surface=None, particleDistance=None):
         """Find optimal cylinder around particle and surface, such that it 
         is not interfering with other shells. Miedema's algorithm.
 
         """
         allNeighbors = \
-            self.getNeighborsWithinRadiusNoSort( projectedPoint, 
-                                                 self.getMaxShellSize(),
-                                                 ignore=[ single, ] )
+            self.getNeighborsWithinRadiusNoSort(projectedPoint, 
+                                                self.getMaxShellSize(),
+                                                ignore=[single,])
 
         for object in allNeighbors:
             for shell in object.shellList:
@@ -1009,23 +1005,24 @@ class EGFRDSimulator( ParticleSimulatorBase ):
                     # This is one of the bursted singles.
                     # Or a particle that just escaped it's multi.
                     objectRadius *= MINIMAL_SINGLE_RADIUS_FACTOR
-                    #assert bursted.__contains__( object ), 'bursted = %s does 
+                    #assert bursted.__contains__(object), 'bursted = %s does 
                     #not contain %s. radius = %.3g.' % (bursted, object, 
                     #object.radius)
 
                 objectVector = shell.origin - projectedPoint
 
                 # Calculate zi and ri for this object.
-                zi = numpy.dot( objectVector, orientationVector )
-                vectorZ = zi * numpy.array( orientationVector )
-                vectorR = numpy.array( objectVector ) - numpy.array( vectorZ )
-                ri = numpy.linalg.norm( vectorR )
+                zi = numpy.dot(objectVector, orientationVector)
+                vectorZ = zi * numpy.array(orientationVector)
+                vectorR = numpy.array(objectVector) - numpy.array(vectorZ)
+                ri = numpy.linalg.norm(vectorR)
 
                 # Calculate dr_i for this object.
                 dr_i = ri - objectRadius
-                if isinstance( surface, CylindricalSurface ):
-                    # Only when this cylinder will be used for an interaction 
-                    # with a CylindricalSurface.
+                if isinstance(surface, CylindricalSurface):
+                    # Run Miedema's algorithm in the r direction 
+                    # relative to the particle's position, not to 
+                    # projected point (r=0).
                     dr_i -= particleDistance
 
                 # Calculate dzLeft_i or dzRight_i (both are usually positive 
@@ -1044,12 +1041,11 @@ class EGFRDSimulator( ParticleSimulatorBase ):
                     # Calculate dzRight_i for this object.
                     dzRight_i = zi - objectRadius
 
-                    if isinstance( surface, PlanarSurface ):
-                        # On the particle side (right side), do Miedema's 
-                        # algorithm relative to the particle's position in the 
-                        # z direction.
-                        # Only when this cylinder will be used for an 
-                        # interaction with a PlanarSurface.
+                    if isinstance(surface, PlanarSurface):
+                        # On the particle side (right side), run 
+                        # Miedema's algorithm in the z direction 
+                        # relative to the particle's position, not the 
+                        # projected point (z=0).
                         dzRight_i -= particleDistance
 
                     # Miedema's algorithm right side.
